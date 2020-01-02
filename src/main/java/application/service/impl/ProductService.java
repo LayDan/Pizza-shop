@@ -16,15 +16,18 @@ public class ProductService implements IProductService {
 
     @Override
     public Product addProduct(Product product) {
-        Product newProduct = Product.builder()
-                .code(product.getCode())
-                .name(product.getName())
-                .description(product.getDescription())
-                .price(product.getPrice())
-                .priceFromSize.
-                .type(product.getType())
-                .build();
-        productRepository.saveAndFlush(newProduct);
-        return newProduct;
+        if(product!=null) {
+            Product newProduct = Product.builder()
+                    .code(product.getCode())
+                    .name(product.getName())
+                    .description(product.getDescription())
+                    .type(product.getType())
+                    .priceFromSize(product.getPriceFromSize())
+                    .build();
+            productRepository.saveAndFlush(newProduct);
+            return newProduct;
+        }else {
+            return null;
+        }
     }
 }

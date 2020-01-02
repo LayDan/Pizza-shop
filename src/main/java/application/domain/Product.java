@@ -1,14 +1,8 @@
 package application.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Map;
 
 @Entity
@@ -20,10 +14,13 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double price;
-    private Integer code;
+    private Long code;
     private String name;
     private String description;
-    private String type;
-    private Map<String, price> priceFromSize;
+    @Enumerated(EnumType.STRING)
+    private TypeProduct type;
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "Product_priceFromSize", joinColumns = @JoinColumn(name = "Product_id"))
+    @NonNull
+    private Map<String, Double> priceFromSize;
 }

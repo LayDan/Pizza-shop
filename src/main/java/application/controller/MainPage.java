@@ -48,5 +48,12 @@ public class MainPage {
         }
         return "main";
     }
+    @GetMapping("/main")
+    public String mainWindow2(Model model) {
+        if (iUserProfileService.getCurrentUser() != null) {
+            model.addAttribute("infoUser", iUserProfileService.getCurrentUser());
+        }
+        return "main";
+    }
 
 }
