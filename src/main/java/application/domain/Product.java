@@ -17,6 +17,7 @@ public class Product {
     private Long code;
     private String name;
     private String description;
+    private Double price;
     @Enumerated(EnumType.STRING)
     private TypeProduct type;
     @ElementCollection(fetch = FetchType.LAZY)

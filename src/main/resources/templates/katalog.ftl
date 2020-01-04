@@ -9,7 +9,7 @@
     ${key} = ${product.priceFromSize[key]}<br>
 </#list>
 <#else>
-no bills
+no asort
 </#list>
 <a href="/addProduct"> Add product</a>
 </@C.page>

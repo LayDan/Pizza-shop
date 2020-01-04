@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,6 +24,10 @@ public class UserProfile implements UserDetails {
     private Boolean active;
     private String firstName;
     private String lastName;
+    @ElementCollection(targetClass = Product.class, fetch = FetchType.LAZY)
+    @CollectionTable(name = "UserProfile_basket", joinColumns = @JoinColumn(name = "UserProfile_id"))
+    @NonNull
+    private List<Long> basket;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_profile_roles", joinColumns = @JoinColumn(name = "user_profile_id"))
