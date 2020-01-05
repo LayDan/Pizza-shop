@@ -1,7 +1,6 @@
 package application.service.impl;
 
 import application.domain.Product;
-import application.domain.Role;
 import application.domain.UserProfile;
 import application.repository.ProductRepository;
 import application.repository.UserProfileRepository;
@@ -63,14 +62,16 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void addToCart(UserProfile userProfile, Product product, String string) {
+    public Product addToCart(UserProfile userProfile, Product product, String string) {
         UserProfile cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
         Product cheekProduct = productRepository.findProductById(product.getId());
-        if (cheekUser != null && !cheekUser.getRoles().contains(Role.ANONYMOUS) && cheekProduct != null) {
+        if (cheekUser != null && cheekProduct != null) {
             cheekProduct.setPrice(cheekProduct.getPriceFromSize().get(string));
             cheekUser.getBasket().add(cheekProduct.getId());
             userProfileRepository.save(cheekUser);
+            return cheekProduct;
         }
+        return null;
     }
 
     @Override

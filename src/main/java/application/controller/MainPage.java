@@ -42,12 +42,13 @@ public class MainPage {
     }
 
     @GetMapping("/")
-    public String mainWindow(Model model) {
+    public String gretting(Model model) {
         if (iUserProfileService.getCurrentUser() != null) {
             model.addAttribute("infoUser", iUserProfileService.getCurrentUser());
         }
         return "main";
     }
+
     @GetMapping("/main")
     public String mainWindow2(Model model) {
         if (iUserProfileService.getCurrentUser() != null) {

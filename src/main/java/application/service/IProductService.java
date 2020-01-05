@@ -10,7 +10,7 @@ public interface IProductService {
 
     void deleteProduct(Long id);
 
-    void addToCart(UserProfile userProfile, Product product, String string);
+    Product addToCart(UserProfile userProfile, Product product, String string);
 
     Double buyProduct(UserProfile userProfile);
 

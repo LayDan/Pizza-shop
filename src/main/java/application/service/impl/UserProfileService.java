@@ -11,7 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserProfileService implements UserDetailsService, IUserProfileService {
@@ -45,6 +47,7 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
                 .username(userProfile.getUsername())
                 .password(passwordEncoder.encode(userProfile.getPassword()))
                 .roles(Collections.singleton(Role.USER))
+                .basket(new ArrayList<>())
                 .build();
         userProfileRepository.saveAndFlush(newUser);
         return newUser;
