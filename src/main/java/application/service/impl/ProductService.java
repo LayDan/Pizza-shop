@@ -1,14 +1,24 @@
 package application.service.impl;
 
 import application.domain.Product;
+import application.domain.TypeProduct;
 import application.domain.UserProfile;
 import application.repository.ProductRepository;
 import application.repository.UserProfileRepository;
 import application.service.IProductService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class ProductService implements IProductService {
+
+    @Value("${upload.path}")
+    private String uploadPath;
 
     private ProductRepository productRepository;
 
@@ -20,21 +30,30 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product addProduct(Product product) {
-        if (product != null) {
-            Product newProduct = Product.builder()
-                    .code(product.getCode())
-                    .name(product.getName())
-                    .description(product.getDescription())
-                    .type(product.getType())
-                    .priceFromSize(product.getPriceFromSize())
-                    .price(0.00)
-                    .build();
-            productRepository.saveAndFlush(newProduct);
-            return newProduct;
-        } else {
-            return null;
+    public Product addProduct(Product product, MultipartFile file, String priceSize) throws IOException {
+        File uploadDir = new File(uploadPath);
+
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
         }
+
+        String uuidFile = UUID.randomUUID().toString();
+        String resultFilename = uuidFile + "." + file.getOriginalFilename();
+
+        file.transferTo(new File(uploadPath + "/" + resultFilename));
+
+        Product newProduct = Product.builder()
+                .code(product.getCode())
+                .name(product.getName())
+                .description(product.getDescription())
+                .type(product.getType())
+                .priceFromSize(new HashMap<>())
+                .imagePath(resultFilename)
+                .price(0.00)
+                .build();
+        productRepository.saveAndFlush(newProduct);
+        return newProduct;
+
     }
 
     @Override
@@ -87,5 +106,31 @@ public class ProductService implements IProductService {
         return null;
     }
 
+    @Override
+    public List<Product> sortType(String type) {
+        for (TypeProduct a : TypeProduct.values()) {
+            if (a.name().equals(type)) {
+                return Arrays.asList(productRepository.findAllByType(a));
+            }
+        }
+        return productRepository.findAll();
+    }
+
+    ////////////////////////////////////////////////////
+    private Map<String, Double> getMap(String string) {
+        String[] arr = string.split(" ");
+        String newString = "";
+        for (String a : arr) {
+            newString = newString.concat(a);
+        }
+        arr = newString.split(";");
+        for (String a : arr) {
+            a.split("-");
+        }
+        Map<String, Double> an = new HashMap<String, Double>();
+        return an;
+    }
+
+    //////////////////////////////////////////////////////////////
 
 }

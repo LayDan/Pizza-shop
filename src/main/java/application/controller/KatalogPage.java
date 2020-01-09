@@ -1,17 +1,20 @@
 package application.controller;
 
 import application.domain.Product;
+import application.domain.TypeProduct;
 import application.domain.UserProfile;
 import application.repository.ProductRepository;
 import application.service.IProductService;
 import application.service.IUserProfileService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/katalog")
 public class KatalogPage {
+
+
     public KatalogPage(IUserProfileService iUserProfileService, ProductRepository productRepository, IProductService iproductService) {
         this.iUserProfileService = iUserProfileService;
         this.productRepository = productRepository;
@@ -24,27 +27,31 @@ public class KatalogPage {
 
     private String katalog = "katalog";
 
-    @GetMapping("/katalog")
-    public String getKatalog(Model model, UserProfile userProfile) {
-        model.addAttribute("AllProduct", productRepository.findAll());
+    @GetMapping()
+    public String getKatalog(@RequestParam(name = "type", required = false, defaultValue = "") String type, Model model, UserProfile userProfile) {
+        model.addAttribute("catalog", TypeProduct.values());
+        model.addAttribute("AllProduct", iproductService.sortType(type));
         return katalog;
     }
 
-    @GetMapping("/addProduct")
-    public String addProduct(Model model) {
-        return "/addProduct";
-    }
-
-    @PostMapping("/addProduct")
-    public String getAddProduct(Model model, Product product) {
-        iproductService.addProduct(product);
-        model.addAttribute("AllProduct", productRepository.findAll());
+    @PostMapping()
+    public String addToCart(@RequestParam(name = "type", required = false, defaultValue = "") String type, Product product, String size, Model model) {
+        model.addAttribute("catalog", TypeProduct.values());
+        model.addAttribute("AllProduct", iproductService.sortType(type));
         return katalog;
     }
 
-    @PostMapping("/katalog")
-    public String addToCart(Product product, String size, Model model) {
-        model.addAttribute("infoAboutBuy",iproductService.addToCart(iUserProfileService.getCurrentUser(),product,size));
-        return katalog;
+    @GetMapping("{name}")
+    public String getProduct(@PathVariable Product product, Model model) {
+        model.addAttribute("product", product);
+        return "productPage";
     }
+    @PostMapping()
+    public String Product(@PathVariable Product product, Model model) {
+
+        model.addAttribute("product", product);
+        return "productPage";
+    }
+
+
 }

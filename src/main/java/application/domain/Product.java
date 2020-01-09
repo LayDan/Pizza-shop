@@ -18,6 +18,7 @@ public class Product {
     private String name;
     private String description;
     private Double price;
+    private String imagePath;
     @Enumerated(EnumType.STRING)
     private TypeProduct type;
     @ElementCollection(fetch = FetchType.LAZY)

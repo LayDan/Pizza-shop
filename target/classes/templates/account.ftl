@@ -1,28 +1,24 @@
 <#import "parts/common.ftl" as C>
 
 <@C.page>
+<link rel="stylesheet" href="/static/style.css"/>
 
-
-Main Page
-<div class="container-fluid" id="middle">
-    <div class="row">
-        <div class="col-lg-3">
-            <span>${infoUser.id}</span>
+<div class="container-fluid" id="accountInfo">
+    <div id="characteristicsInfo">
+        <div class="info">
+            <label> Name : ${infoUser.firstName}</label>
         </div>
-        <div class="col-lg-3">
-            <span>${infoUser.username}</span>
+        <div class="info">
+            <label> Last Name : ${infoUser.lastName}</label>
         </div>
-        <div class="col-lg-3">
-            <span>${infoUser.firstName}</span>
+        <div class="info">
+            <label> Login : ${infoUser.username}</label>
         </div>
-        <div class="col-lg-3">
-            <span>${infoUser.bonus}</span>
+        <div class="info">
+            <label> Bonus : ${infoUser.bonus}</label>
         </div>
     </div>
 </div>
-<tr>
-    <td><#list infoUser.roles as role>${role}<#sep>,</#list></td>
-</tr>
 
 
 </@C.page>

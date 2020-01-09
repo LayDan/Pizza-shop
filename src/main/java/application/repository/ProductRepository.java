@@ -1,8 +1,11 @@
 package application.repository;
 
 import application.domain.Product;
+import application.domain.TypeProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductRepository extends JpaRepository<Product,Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findProductById(Long id);
+
+    Product[] findAllByType(TypeProduct type);
 }

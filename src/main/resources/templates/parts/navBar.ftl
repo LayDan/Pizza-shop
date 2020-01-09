@@ -11,8 +11,12 @@
         <ul class="navbar-nav mr-auto">
             <#if isAdmin>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="/katalog" id="navbarDropdown" role="button"
+                <a href="/katalog" class="nav-link dropdown-toggle"  id="navbarDropdown" role="button"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Каталог</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/katalog">Каталог</a>
+                    <a class="dropdown-item" href="/addProduct">Добавить товар</a>
+                </div>
             </li>
             <#else>
             <li class="nav-item">
