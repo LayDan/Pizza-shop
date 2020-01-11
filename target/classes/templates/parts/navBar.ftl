@@ -15,7 +15,7 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Каталог</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/katalog">Каталог</a>
-                    <a class="dropdown-item" href="/addProduct">Добавить товар</a>
+                    <a class="dropdown-item" href="/addProduct?size=1">Добавить товар</a>
                 </div>
             </li>
             <#else>

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class ProductFunction {
@@ -24,8 +27,17 @@ public class ProductFunction {
         this.iproductService = iproductService;
     }
 
+    private ArrayList<Integer> arr = new ArrayList<>();
+
     @GetMapping("/addProduct")
-    public String addProduct(Model model) {
+    public String addProduct(Model model, @RequestParam(value = "size", defaultValue = "1") String size) {
+        if (arr.size() != Integer.parseInt(size)) {
+            arr.clear();
+            for (int i = 1; i < Integer.parseInt(size) + 1; i++) {
+                arr.add(i);
+            }
+        }
+        model.addAttribute("array", arr);
         model.addAttribute("types", TypeProduct.values());
         return "addProduct";
     }
@@ -33,15 +45,27 @@ public class ProductFunction {
     @PostMapping("/addProduct")
     public String getAddProduct(Model model, Product product,
                                 @RequestParam("file") MultipartFile file,
-                                @RequestParam String priceSize) throws IOException
-    {
-        if (product != null) {
-            iproductService.addProduct(product, file, priceSize);
-            model.addAttribute("catalog", TypeProduct.values());
+                                @RequestParam(name = "sizeProduct") String[] sizeProduct,
+                                @RequestParam(name = "priceForProduct") Double[] price) throws IOException {
+        Map<String, Double> map = new HashMap<>();
+        if (product != null && sizeProduct.length == price.length) {
+            for (int i = 0; i < sizeProduct.length; i++) {
+                if (sizeProduct[i] == null || price[i] == null) {
+                    break;
+                } else {
+                    map.put(sizeProduct[i], price[i]);
+                }
+            }
+            product.setPriceFromSize(map);
+            iproductService.addProduct(product, file);
             model.addAttribute("AllProduct", productRepository.findAll());
+            model.addAttribute("catalog", TypeProduct.values());
+            arr.clear();
             return "katalog";
         } else {
+            arr.clear();
             return "addProduct";
         }
     }
+
 }

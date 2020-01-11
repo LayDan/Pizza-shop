@@ -28,7 +28,7 @@ public class KatalogPage {
     private String katalog = "katalog";
 
     @GetMapping()
-    public String getKatalog(@RequestParam(name = "type", required = false, defaultValue = "") String type, Model model, UserProfile userProfile) {
+    public String getKatalog(@RequestParam(name = "type", required = false, defaultValue = "") String type, Model model) {
         model.addAttribute("catalog", TypeProduct.values());
         model.addAttribute("AllProduct", iproductService.sortType(type));
         return katalog;
@@ -41,17 +41,10 @@ public class KatalogPage {
         return katalog;
     }
 
-    @GetMapping("{name}")
-    public String getProduct(@PathVariable Product product, Model model) {
-        model.addAttribute("product", product);
+    @GetMapping(value = "{product}")
+    public String getProduct(@PathVariable Product product,Model model) {
+        model.addAttribute("product",product);
+        model.addAttribute("priceFromSize",product.getPriceFromSize());
         return "productPage";
     }
-    @PostMapping()
-    public String Product(@PathVariable Product product, Model model) {
-
-        model.addAttribute("product", product);
-        return "productPage";
-    }
-
-
 }

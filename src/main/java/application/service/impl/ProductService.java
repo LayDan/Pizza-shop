@@ -30,7 +30,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product addProduct(Product product, MultipartFile file, String priceSize) throws IOException {
+    public Product addProduct(Product product, MultipartFile file) throws IOException {
         File uploadDir = new File(uploadPath);
 
         if (!uploadDir.exists()) {
@@ -47,7 +47,7 @@ public class ProductService implements IProductService {
                 .name(product.getName())
                 .description(product.getDescription())
                 .type(product.getType())
-                .priceFromSize(new HashMap<>())
+                .priceFromSize(product.getPriceFromSize())
                 .imagePath(resultFilename)
                 .price(0.00)
                 .build();
