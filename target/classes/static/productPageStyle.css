@@ -1,34 +1,52 @@
-.image-main {
-    background: #fff none repeat scroll 0 0;
-    height: auto;
-    padding-left:15px;
-    position:absolute;
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
 }
-img {
-    padding-top:80px;
-    height: 450px;
-    max-width: 450px;
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
 }
-.info-main{
-    position:absolute;
-    height:auto;
-    max-width:100%;
+.left-column {
+  width: 65%;
+  position: relative;
+}
+
+.right-column {
+  width: 35%;
+  margin-top: 50px;
+}
+.left-column img {
+  width:70%;
+  height:auto;
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: nev 1.5s;
 }
 .name{
-    font-style: italic;
-	color: gray;
-	max-width:100%;
-	height:auto;
-    margin-left:700px;
     font-size: 40px;
+    color:#00008B;
 }
 .textDescription{
-    position:relative;
-    padding-top:120px;
-    max-width:100%;
-    height:auto;
-    font-style: italic;
-	color: gray;
-    margin-left:400px;
-    font-size: 28px;
+    margin-top: 40px;
+    font-size:18px;
+    color:#808080;
+}
+.selected{
+    margin-top:40px;
+}
+
+
+@keyframes nev {
+from {	/* От */
+opacity: 0;	/* полная прозрачность */
+}
+to {	/* До */
+opacity: 1;	/* полная непрозрачность */
+}
 }

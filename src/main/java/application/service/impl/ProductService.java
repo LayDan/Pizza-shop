@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements IProductService {
@@ -42,12 +43,20 @@ public class ProductService implements IProductService {
 
         file.transferTo(new File(uploadPath + "/" + resultFilename));
 
+        Map<String, Double> newMap = product.getPriceFromSize().entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
         Product newProduct = Product.builder()
                 .code(product.getCode())
                 .name(product.getName())
                 .description(product.getDescription())
                 .type(product.getType())
-                .priceFromSize(product.getPriceFromSize())
+                .priceFromSize(newMap)
                 .imagePath(resultFilename)
                 .price(0.00)
                 .build();

@@ -11,7 +11,7 @@
         <ul class="navbar-nav mr-auto">
             <#if isAdmin>
             <li class="nav-item dropdown">
-                <a href="/katalog" class="nav-link dropdown-toggle"  id="navbarDropdown" role="button"
+                <a href="/katalog" class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Каталог</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/katalog">Каталог</a>
@@ -23,11 +23,11 @@
                 <a class="nav-link" href="/katalog" id="navbarDropdown2" role="button"
                    aria-haspopup="true" aria-expanded="false">Каталог</a>
             </li>
-        </#if>
-        <li class="nav-item dropdown">
+            </#if>
+            <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="/account" id="navbarDropdown1" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Аккаунт</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/account">Личный кабинет</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">Корзина</a>

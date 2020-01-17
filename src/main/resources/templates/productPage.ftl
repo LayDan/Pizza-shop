@@ -2,17 +2,21 @@
 
 <@C.page>
 <link rel="stylesheet" href="/static/productPageStyle.css"/>
-<div>
-    <div class="image-main">
+
+
+<div class="container">
+    <div class="left-column">
         <img src="/images/${product.imagePath}">
     </div>
-    <div class="info-main">
-        <label class="name">${product.name}</label>
-        <label class="textDescription">${product.description}</label>
-    </div>
-    <div>
+    <div class="right-column">
+        <div class="name">${product.name}</div>
+        <div class="textDescription">${product.description}</div>
         <#list priceFromSize?keys as key>
-        ${key} = ${priceFromSize[key]}
+        <div class="btn btn-primary selected">
+            ${key} = ${priceFromSize[key]}
+        </div>
     </#list>
-</div>
+    </div>
+
+
 </@C.page>
