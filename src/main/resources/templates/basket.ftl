@@ -6,7 +6,7 @@
 <div class="container">
     <div class="left-column">
         <div class="col-md-8 products">
-            <d class="row">
+            <div class="row">
                 <#list basket as b>
                 <div class="col-sm-3 product-wrapper" id="myDIV">
                     <div class="product">
@@ -26,10 +26,17 @@
         </div>
     </div>
     <div class="right-column">
+        <#if success??>
+        <div>${success}</div>
+        <#else>
         <div>${money}</div>
-        <form action="/basket" method="post">
-            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-            <button type="submit">Оформить заказ</button>
-        </form>
-    </div>
+    </#if>
+    <form action="/basket" method="post">
+        <label><input type="checkbox" name="delivery" value=0>Забрать в магазине</label>
+        <label><input type="checkbox" name="delivery" value=40>Курьер</label>
+        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+        <input type="hidden" name="status" value=""/>
+        <button type="submit">Оформить заказ</button>
+    </form>
+</div>
 </@C.page>

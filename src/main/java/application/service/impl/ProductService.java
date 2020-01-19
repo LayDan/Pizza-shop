@@ -101,7 +101,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Double buyProduct(UserProfile userProfile) {
+    public Double buyProduct(UserProfile userProfile,Double delivery) {
         UserProfile cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
         if (cheekUser != null && !cheekUser.getBasket().isEmpty()) {
             Double money = 0.00;
@@ -109,7 +109,9 @@ public class ProductService implements IProductService {
                 money = money + a.getPrice();
             }
             userProfile.getBasket().clear();
-            return money;
+            if(delivery!=null) {
+                return money + delivery;
+            }
         }
         return null;
     }

@@ -6,8 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.Locale;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AccountPage {
@@ -39,10 +38,19 @@ public class AccountPage {
     }
 
     @PostMapping("/basket")
-    public String BuyBasket(Model model) {
-        model.addAttribute("basket", iUserProfileService.getCurrentUser().getBasket());
-        model.addAttribute("success", iProductService.buyProduct(iUserProfileService.getCurrentUser()));
-        model.addAttribute("money", iUserProfileService.money());
+    public String BuyBasket(Model model, @RequestParam(required = false) String status, @RequestParam(required = false) Double delivery) {
+        if (status != null) {
+            model.addAttribute("success", iProductService.buyProduct(iUserProfileService.getCurrentUser(), delivery));
+            model.addAttribute("basket", iUserProfileService.getCurrentUser().getBasket());
+            model.addAttribute("money", iUserProfileService.money());
+        } else {
+            model.addAttribute("basket", iUserProfileService.getCurrentUser().getBasket());
+            if (delivery!=null) {
+                model.addAttribute("success", iUserProfileService.money() + delivery);
+            } else {
+                model.addAttribute("money", iUserProfileService.money());
+            }
+        }
         return "basket";
     }
 
