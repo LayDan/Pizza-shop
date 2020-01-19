@@ -43,7 +43,7 @@ public class ProductService implements IProductService {
 
         file.transferTo(new File(uploadPath + "/" + resultFilename));
 
-        Map<String, Double> newMap = product.getPriceFromSize().entrySet()
+        LinkedHashMap<String, Double> newMap = product.getPriceFromSize().entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(
@@ -58,7 +58,7 @@ public class ProductService implements IProductService {
                 .type(product.getType())
                 .priceFromSize(newMap)
                 .imagePath(resultFilename)
-                .price(0.00)
+                .price(null)
                 .build();
         productRepository.saveAndFlush(newProduct);
         return newProduct;
@@ -90,16 +90,14 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product addToCart(UserProfile userProfile, Product product, String string) {
+    public void addToCart(UserProfile userProfile, Product product, Double price) {
         UserProfile cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
         Product cheekProduct = productRepository.findProductById(product.getId());
         if (cheekUser != null && cheekProduct != null) {
-            cheekProduct.setPrice(cheekProduct.getPriceFromSize().get(string));
-            cheekUser.getBasket().add(cheekProduct.getId());
-            userProfileRepository.save(cheekUser);
-            return cheekProduct;
+            product.setPrice(price);
+            userProfile.getBasket().add(product);
+            userProfileRepository.save(userProfile);
         }
-        return null;
     }
 
     @Override
@@ -107,9 +105,10 @@ public class ProductService implements IProductService {
         UserProfile cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
         if (cheekUser != null && !cheekUser.getBasket().isEmpty()) {
             Double money = 0.00;
-            for (Long a : cheekUser.getBasket()) {
-                money = money + productRepository.findProductById(a).getPrice();
+            for (Product a : cheekUser.getBasket()) {
+                money = money + a.getPrice();
             }
+            userProfile.getBasket().clear();
             return money;
         }
         return null;
@@ -126,19 +125,19 @@ public class ProductService implements IProductService {
     }
 
     ////////////////////////////////////////////////////
-    private Map<String, Double> getMap(String string) {
-        String[] arr = string.split(" ");
-        String newString = "";
-        for (String a : arr) {
-            newString = newString.concat(a);
-        }
-        arr = newString.split(";");
-        for (String a : arr) {
-            a.split("-");
-        }
-        Map<String, Double> an = new HashMap<String, Double>();
-        return an;
-    }
+//    private Map<String, Double> getMap(String string) {
+//        String[] arr = string.split(" ");
+//        String newString = "";
+//        for (String a : arr) {
+//            newString = newString.concat(a);
+//        }
+//        arr = newString.split(";");
+//        for (String a : arr) {
+//            a.split("-");
+//        }
+//        Map<String, Double> an = new HashMap<String, Double>();
+//        return an;
+//    }
 
     //////////////////////////////////////////////////////////////
 

@@ -2,7 +2,6 @@ package application.controller;
 
 import application.domain.Product;
 import application.domain.TypeProduct;
-import application.domain.UserProfile;
 import application.repository.ProductRepository;
 import application.service.IProductService;
 import application.service.IUserProfileService;
@@ -42,9 +41,29 @@ public class KatalogPage {
     }
 
     @GetMapping(value = "{product}")
-    public String getProduct(@PathVariable Product product,Model model) {
-        model.addAttribute("product",product);
-        model.addAttribute("priceFromSize",product.getPriceFromSize());
+    public String getProduct(@PathVariable Product product, Model model) {
+        model.addAttribute("product", product);
+        model.addAttribute("priceFromSize", product.getPriceFromSize());
+        return "productPage";
+    }
+
+    @PostMapping(value = "{product}")
+    public String getProductSize(Model model, String size,Product product, Double priceToBasket) {
+
+        if(priceToBasket!=null){
+            iproductService.addToCart(iUserProfileService.getCurrentUser(),product,priceToBasket);
+            model.addAttribute("basket",iUserProfileService.getCurrentUser().getBasket());
+            model.addAttribute("catalog", TypeProduct.values());
+            model.addAttribute("AllProduct", productRepository.findAll());
+            return katalog;
+        }
+        if(size!=null) {
+            Double selectPrice = product.getPriceFromSize().get(size);
+            model.addAttribute("price", selectPrice);
+            model.addAttribute("product", product);
+            model.addAttribute("priceFromSize", product.getPriceFromSize());
+            return "productPage";
+        }
         return "productPage";
     }
 }

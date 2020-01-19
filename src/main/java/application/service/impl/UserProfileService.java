@@ -1,5 +1,6 @@
 package application.service.impl;
 
+import application.domain.Product;
 import application.domain.Role;
 import application.domain.UserProfile;
 import application.repository.UserProfileRepository;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @Service
 public class UserProfileService implements UserDetailsService, IUserProfileService {
@@ -56,5 +56,14 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
     @Override
     public UserProfile getCurrentUser() {
         return (UserProfile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    @Override
+    public Double money() {
+        Double money = 0.0;
+        for (Product p : getCurrentUser().getBasket()) {
+            money = money + p.getPrice();
+        }
+        return money;
     }
 }

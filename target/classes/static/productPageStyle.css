@@ -26,7 +26,7 @@ html, body {
   position: absolute;
   left: 0;
   top: 0;
-  animation: nev 1.5s;
+  animation: nev .5s;
 }
 .name{
     font-size: 40px;
@@ -40,13 +40,24 @@ html, body {
 .selected{
     margin-top:40px;
 }
+.selected:hover,
+.selected:focus{
+   color: #9555af;
+   border-color: currentColor;
+   background-color: white;
+}
+
+.price{
+   margin-top:40px;
+   font-size: 30px;
+}
 
 
 @keyframes nev {
-from {	/* От */
-opacity: 0;	/* полная прозрачность */
-}
-to {	/* До */
-opacity: 1;	/* полная непрозрачность */
-}
+    from {	/* От */
+        opacity: 0;	/* полная прозрачность */
+    }
+    to {	/* До */
+        opacity: 1;	/* полная непрозрачность */
+    }
 }

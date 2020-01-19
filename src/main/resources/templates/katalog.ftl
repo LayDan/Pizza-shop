@@ -2,6 +2,7 @@
 
 <@C.page>
 <link rel="stylesheet" href="/static/katalogStyle.css"/>
+<!--<link rel="stylesheet" href="/static/style.css"/>-->
 <div class="row">
     <div class="col-md-2">
 

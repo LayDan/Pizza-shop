@@ -30,7 +30,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/account">Личный кабинет</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Корзина</a>
+                <a class="dropdown-item" href="/basket">Корзина</a>
             </div>
         </li>
     </div>

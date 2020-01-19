@@ -11,12 +11,25 @@
     <div class="right-column">
         <div class="name">${product.name}</div>
         <div class="textDescription">${product.description}</div>
-        <#list priceFromSize?keys as key>
-        <div class="btn btn-primary selected">
-            ${key} = ${priceFromSize[key]}
-        </div>
-    </#list>
-    </div>
+        <form method="post">
+            <#list priceFromSize?keys as key>
+            <div>
+                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                <input class="btn btn-primary selected" type="submit" value="${key}" name="size"><Br>
+            </div>
 
+        </#list>
+        </form>
+        <div class="price">
+            <#if price??>
+            Price = ${price}
+            <form method="post">
+                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                <button class="btn btn-success selected" type="submit" value="${price}" name="priceToBasket">Добавить в корзину</button>
+            </form>
+            <#else>
+            Please select
+            </#if>
+        </div>
 
 </@C.page>

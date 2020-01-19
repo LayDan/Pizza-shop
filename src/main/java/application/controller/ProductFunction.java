@@ -7,14 +7,14 @@ import application.service.IProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 @Controller
 public class ProductFunction {
@@ -47,7 +47,7 @@ public class ProductFunction {
                                 @RequestParam("file") MultipartFile file,
                                 @RequestParam(name = "sizeProduct") String[] sizeProduct,
                                 @RequestParam(name = "priceForProduct") Double[] price) throws IOException {
-        Map<String, Double> map = new HashMap<>();
+        LinkedHashMap<String, Double> map = new LinkedHashMap<>();
         if (product != null && sizeProduct.length == price.length) {
             for (int i = 0; i < sizeProduct.length; i++) {
                 if (sizeProduct[i] == null || price[i] == null) {

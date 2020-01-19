@@ -14,7 +14,7 @@ public interface IProductService {
 
     void deleteProduct(Long id);
 
-    Product addToCart(UserProfile userProfile, Product product, String string);
+    void addToCart(UserProfile userProfile, Product product, Double price);
 
     Double buyProduct(UserProfile userProfile);
 

@@ -21,7 +21,7 @@ public class Product {
     private String imagePath;
     @Enumerated(EnumType.STRING)
     private TypeProduct type;
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Product_priceFromSize", joinColumns = @JoinColumn(name = "Product_id"))
     @NonNull
     private Map<String, Double> priceFromSize;
