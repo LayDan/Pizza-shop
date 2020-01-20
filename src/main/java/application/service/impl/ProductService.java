@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ProductService implements IProductService {
 
     @Value("${upload.path}")
@@ -31,7 +32,6 @@ public class ProductService implements IProductService {
         this.userProfileRepository = userProfileRepository;
     }
 
-    @Transactional
     @Override
     public Product addProduct(Product product, MultipartFile file) throws IOException {
         File uploadDir = new File(uploadPath);
@@ -68,7 +68,6 @@ public class ProductService implements IProductService {
 
     }
 
-    @Transactional
     @Override
     public Product editProduct(Product product, Double stock, String name) {
         Product cheekProduct = productRepository.findProductById(product.getId());
@@ -92,7 +91,6 @@ public class ProductService implements IProductService {
         }
     }
 
-    @Transactional
     @Override
     public void deleteProduct(Long id) {
         Product product = productRepository.findProductById(id);
@@ -101,7 +99,6 @@ public class ProductService implements IProductService {
         }
     }
 
-    @Transactional
     @Override
     public void addToCart(UserProfile userProfile, Product product, Double price) {
         UserProfile cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());

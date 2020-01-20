@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,16 +28,19 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userProfileRepository.findByUsername(username);
     }
 
+    @Transactional
     @Override
     public boolean findByUsername(String username) {
         return userProfileRepository.findByUsername(username) != null;
     }
 
+    @Transactional
     @Override
     public UserProfile addUser(UserProfile userProfile) {
         UserProfile newUser = UserProfile.builder()
@@ -54,10 +58,12 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
     }
 
     @Override
+    @Transactional
     public UserProfile getCurrentUser() {
         return (UserProfile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    @Transactional
     @Override
     public Double money() {
         Double money = 0.0;
