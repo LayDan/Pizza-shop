@@ -2,6 +2,8 @@ package application.controller;
 
 import application.service.IProductService;
 import application.service.IUserProfileService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@Api(value = "Account resources")
 public class AccountPage {
 
     public AccountPage(IUserProfileService iUserProfileService, IProductService iProductService) {
@@ -45,7 +48,7 @@ public class AccountPage {
             model.addAttribute("money", iUserProfileService.money());
         } else {
             model.addAttribute("basket", iUserProfileService.getCurrentUser().getBasket());
-            if (delivery!=null) {
+            if (delivery != null) {
                 model.addAttribute("success", iUserProfileService.money() + delivery);
             } else {
                 model.addAttribute("money", iUserProfileService.money());

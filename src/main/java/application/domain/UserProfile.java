@@ -1,5 +1,8 @@
 package application.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,25 +17,35 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
+@ApiModel(value = "class User")
 public class UserProfile implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
+    @ApiModelProperty(value = "userName")
     private String username;
+    @ApiModelProperty(value = "password")
     private String password;
+    @ApiModelProperty(value = "bonus")
     private Integer bonus;
+    @ApiModelProperty(value = "active")
     private Boolean active;
+    @ApiModelProperty(value = "firstName")
     private String firstName;
+    @ApiModelProperty(value = "lastName")
     private String lastName;
     @ElementCollection(targetClass = Product.class, fetch = FetchType.LAZY)
     @CollectionTable(name = "UserProfile_basket", joinColumns = @JoinColumn(name = "UserProfile_id"))
     @NonNull
+    @ApiModelProperty(value = "basket")
     private List<Product> basket;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_profile_roles", joinColumns = @JoinColumn(name = "user_profile_id"))
     @Enumerated(EnumType.STRING)
     @NonNull
+    @ApiModelProperty(value = "role")
     private Set<Role> roles;
 
     @Override
