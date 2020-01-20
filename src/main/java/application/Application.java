@@ -14,8 +14,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Locale;
 
 @SpringBootApplication
-@EnableSwagger2
 @PropertySource("classpath:application.properties")
+@EnableSwagger2
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
