@@ -1,9 +1,9 @@
-# Practical Bank
+# PizzaShop
 
 
 
 
-[![Build Status](https://travis-ci.org/LayDan/bank_hibernate.svg?branch=master)](https://travis-ci.org/LayDan/bank_hibernate)
+[![Build Status](https://travis-ci.org/LayDan/pizzaShop.svg?branch=master)](https://travis-ci.org/LayDan/pizzaShop)
 
 
 The following technologies are used :
