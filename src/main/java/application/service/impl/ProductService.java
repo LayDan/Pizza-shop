@@ -8,6 +8,7 @@ import application.repository.UserProfileRepository;
 import application.service.IProductService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -30,6 +31,7 @@ public class ProductService implements IProductService {
         this.userProfileRepository = userProfileRepository;
     }
 
+    @Transactional
     @Override
     public Product addProduct(Product product, MultipartFile file) throws IOException {
         File uploadDir = new File(uploadPath);
@@ -59,21 +61,30 @@ public class ProductService implements IProductService {
                 .priceFromSize(newMap)
                 .imagePath(resultFilename)
                 .price(null)
+                .stock(null)
                 .build();
         productRepository.saveAndFlush(newProduct);
         return newProduct;
 
     }
 
+    @Transactional
     @Override
-    public Product editProduct(Product product, Product newProduct) {
+    public Product editProduct(Product product, Double stock, String name) {
         Product cheekProduct = productRepository.findProductById(product.getId());
-        if (cheekProduct != null && cheekProduct != newProduct) {
-            cheekProduct.setCode(newProduct.getCode());
-            cheekProduct.setName(newProduct.getName());
-            cheekProduct.setDescription(newProduct.getDescription());
-            cheekProduct.setType(newProduct.getType());
-            cheekProduct.setPriceFromSize(newProduct.getPriceFromSize());
+        if (name == null && cheekProduct != null) {
+            name = cheekProduct.getName();
+        }
+        if (stock == null) {
+            stock = 0.0;
+        }
+        if (cheekProduct != null) {
+            cheekProduct.setName(name);
+            cheekProduct.setStock(stock);
+            for (String a : cheekProduct.getPriceFromSize().keySet()) {
+                Double b = cheekProduct.getPriceFromSize().get(a);
+                cheekProduct.getPriceFromSize().replace(a, b, b - (b * (stock / 100)));
+            }
             productRepository.save(cheekProduct);
             return cheekProduct;
         } else {
@@ -81,6 +92,7 @@ public class ProductService implements IProductService {
         }
     }
 
+    @Transactional
     @Override
     public void deleteProduct(Long id) {
         Product product = productRepository.findProductById(id);
@@ -89,6 +101,7 @@ public class ProductService implements IProductService {
         }
     }
 
+    @Transactional
     @Override
     public void addToCart(UserProfile userProfile, Product product, Double price) {
         UserProfile cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
@@ -101,7 +114,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Double buyProduct(UserProfile userProfile,Double delivery) {
+    public Double buyProduct(UserProfile userProfile, Double delivery) {
         UserProfile cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
         if (cheekUser != null && !cheekUser.getBasket().isEmpty()) {
             Double money = 0.00;
@@ -109,7 +122,7 @@ public class ProductService implements IProductService {
                 money = money + a.getPrice();
             }
             userProfile.getBasket().clear();
-            if(delivery!=null) {
+            if (delivery != null) {
                 return money + delivery;
             }
         }
@@ -126,21 +139,25 @@ public class ProductService implements IProductService {
         return productRepository.findAll();
     }
 
-    ////////////////////////////////////////////////////
-//    private Map<String, Double> getMap(String string) {
-//        String[] arr = string.split(" ");
-//        String newString = "";
-//        for (String a : arr) {
-//            newString = newString.concat(a);
-//        }
-//        arr = newString.split(";");
-//        for (String a : arr) {
-//            a.split("-");
-//        }
-//        Map<String, Double> an = new HashMap<String, Double>();
-//        return an;
-//    }
-
-    //////////////////////////////////////////////////////////////
-
+    @Override
+    public ArrayList<Product> search(String name) {
+        char[] arrName = name.toLowerCase().toCharArray();
+        ArrayList<Product> arr = new ArrayList<>();
+        for (Product p : productRepository.findAll()) {
+            char[] product = p.getName().toLowerCase().toCharArray();
+            boolean cheek = true;
+            for (int i = 0; i < arrName.length; i++) {
+                if (arrName[i] != product[i]) {
+                    break;
+                }
+                if (i == arrName.length - 1 && arrName[i] == product[i]) {
+                    arr.add(p);
+                } else if (i == product.length - 1 && arrName[i] == product[i]) {
+                    arr.add(p);
+                    break;
+                }
+            }
+        }
+        return arr;
+    }
 }

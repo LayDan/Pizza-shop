@@ -19,6 +19,7 @@ create table product (
     image_path varchar(255),
     description varchar(255),
     price Double,
+    stock Double,
     name varchar(255),
     type varchar(255),
     primary key (id)

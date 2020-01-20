@@ -31,5 +31,7 @@
             Please select
             </#if>
         </div>
+    <a href="/editProduct?productId=${product.id}">Edit</a>
+    <a href="/delete?productId=${product.id}">Delete</a>
 
 </@C.page>

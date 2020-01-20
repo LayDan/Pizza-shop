@@ -7,7 +7,6 @@ import application.service.IProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,6 +65,27 @@ public class ProductFunction {
             arr.clear();
             return "addProduct";
         }
+    }
+
+    @GetMapping("/editProduct")
+    public String editProduct(Model model, Product product) {
+        model.addAttribute(product);
+        return "editProduct";
+    }
+
+    @PostMapping("/editProduct")
+    public String postEditProduct(Model model, @RequestParam(name = "productId") Product product, Double stock, String name) {
+        iproductService.editProduct(product, stock, name);
+        model.addAttribute("AllProduct", productRepository.findAll());
+        model.addAttribute("catalog", TypeProduct.values());
+        return "katalog";
+    }
+    @GetMapping("/delete")
+    public String deleteProduct(Model model, @RequestParam(name = "productId") Product product) {
+        iproductService.deleteProduct(product.getId());
+        model.addAttribute("AllProduct", productRepository.findAll());
+        model.addAttribute("catalog", TypeProduct.values());
+        return "katalog";
     }
 
 }

@@ -19,6 +19,7 @@ public class Product {
     private String description;
     private Double price;
     private String imagePath;
+    private Double stock;
     @Enumerated(EnumType.STRING)
     private TypeProduct type;
     @ElementCollection(fetch = FetchType.EAGER)

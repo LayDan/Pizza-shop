@@ -34,9 +34,15 @@ public class KatalogPage {
     }
 
     @PostMapping()
-    public String addToCart(@RequestParam(name = "type", required = false, defaultValue = "") String type, Product product, String size, Model model) {
+    public String addToCart(@RequestParam(name = "search", required = false) String search,
+                            @RequestParam(name = "type", required = false, defaultValue = "") String type, Product product, Model model) {
+        if (search != null) {
+            model.addAttribute("AllProduct", iproductService.search(search));
+        } else {
+            model.addAttribute("AllProduct", iproductService.sortType(type));
+        }
         model.addAttribute("catalog", TypeProduct.values());
-        model.addAttribute("AllProduct", iproductService.sortType(type));
+
         return katalog;
     }
 
@@ -48,16 +54,16 @@ public class KatalogPage {
     }
 
     @PostMapping(value = "{product}")
-    public String getProductSize(Model model, String size,Product product, Double priceToBasket) {
+    public String getProductSize(Model model, String size, Product product, Double priceToBasket) {
 
-        if(priceToBasket!=null){
-            iproductService.addToCart(iUserProfileService.getCurrentUser(),product,priceToBasket);
-            model.addAttribute("basket",iUserProfileService.getCurrentUser().getBasket());
+        if (priceToBasket != null) {
+            iproductService.addToCart(iUserProfileService.getCurrentUser(), product, priceToBasket);
+            model.addAttribute("basket", iUserProfileService.getCurrentUser().getBasket());
             model.addAttribute("catalog", TypeProduct.values());
             model.addAttribute("AllProduct", productRepository.findAll());
             return katalog;
         }
-        if(size!=null) {
+        if (size != null) {
             Double selectPrice = product.getPriceFromSize().get(size);
             model.addAttribute("price", selectPrice);
             model.addAttribute("product", product);
