@@ -142,7 +142,6 @@ public class ProductService implements IProductService {
         ArrayList<Product> arr = new ArrayList<>();
         for (Product p : productRepository.findAll()) {
             char[] product = p.getName().toLowerCase().toCharArray();
-            boolean cheek = true;
             for (int i = 0; i < arrName.length; i++) {
                 if (arrName[i] != product[i]) {
                     break;
