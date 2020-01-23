@@ -1,5 +1,6 @@
 package application.controller;
 
+import application.domain.LocaleMessage;
 import application.domain.Product;
 import application.domain.TypeProduct;
 import application.repository.ProductRepository;
@@ -8,6 +9,8 @@ import application.service.IUserProfileService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/katalog")
@@ -28,7 +31,15 @@ public class KatalogPage {
 
     @GetMapping()
     public String getKatalog(@RequestParam(name = "type", required = false, defaultValue = "") String type, Model model) {
-        model.addAttribute("catalog", TypeProduct.values());
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute("catalog", localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
+        model.addAttribute("account", localeMessage.getMessage(Locale.getDefault(), "label.account"));
+        model.addAttribute("basket", localeMessage.getMessage(Locale.getDefault(), "label.basket"));
+        model.addAttribute("registration", localeMessage.getMessage(Locale.getDefault(), "label.registration"));
+
+        model.addAttribute("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
+        model.addAttribute("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
+        model.addAttribute("types", TypeProduct.values());
         model.addAttribute("AllProduct", iproductService.sortType(type));
         return katalog;
     }
@@ -41,13 +52,29 @@ public class KatalogPage {
         } else {
             model.addAttribute("AllProduct", iproductService.sortType(type));
         }
-        model.addAttribute("catalog", TypeProduct.values());
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute("catalog", localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
+        model.addAttribute("account", localeMessage.getMessage(Locale.getDefault(), "label.account"));
+        model.addAttribute("basket", localeMessage.getMessage(Locale.getDefault(), "label.basket"));
+        model.addAttribute("registration", localeMessage.getMessage(Locale.getDefault(), "label.registration"));
+
+        model.addAttribute("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
+        model.addAttribute("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
+        model.addAttribute("types", TypeProduct.values());
 
         return katalog;
     }
 
     @GetMapping(value = "{product}")
     public String getProduct(@PathVariable Product product, Model model) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute("catalog", localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
+        model.addAttribute("account", localeMessage.getMessage(Locale.getDefault(), "label.account"));
+        model.addAttribute("basket", localeMessage.getMessage(Locale.getDefault(), "label.basket"));
+        model.addAttribute("registration", localeMessage.getMessage(Locale.getDefault(), "label.registration"));
+
+        model.addAttribute("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
+        model.addAttribute("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
         model.addAttribute("product", product);
         model.addAttribute("priceFromSize", product.getPriceFromSize());
         return "productPage";
@@ -55,11 +82,19 @@ public class KatalogPage {
 
     @PostMapping(value = "{product}")
     public String getProductSize(Model model, String size, Product product, Double priceToBasket) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute("catalog", localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
+        model.addAttribute("account", localeMessage.getMessage(Locale.getDefault(), "label.account"));
+        model.addAttribute("basket", localeMessage.getMessage(Locale.getDefault(), "label.basket"));
+        model.addAttribute("registration", localeMessage.getMessage(Locale.getDefault(), "label.registration"));
+
+        model.addAttribute("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
+        model.addAttribute("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
 
         if (priceToBasket != null) {
             iproductService.addToCart(iUserProfileService.getCurrentUser(), product, priceToBasket);
             model.addAttribute("basket", iUserProfileService.getCurrentUser().getBasket());
-            model.addAttribute("catalog", TypeProduct.values());
+            model.addAttribute("types", TypeProduct.values());
             model.addAttribute("AllProduct", productRepository.findAll());
             return katalog;
         }

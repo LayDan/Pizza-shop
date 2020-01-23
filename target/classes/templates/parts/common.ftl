@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta charset = "ISO-8859-1"/>
     <title>Pizza-Shop</title>
 
 <!--    <link rel="stylesheet" href="/static/style.css"/>-->

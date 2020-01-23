@@ -16,7 +16,7 @@
             <div>
                 <a href="/katalog" name="type" type="submit" class="btn list-group-item">All</a>
             </div>
-            <#list catalog as type>
+            <#list types as type>
             <div>
                 <a href="/katalog?type=${type}" name="type" type="submit" class="btn list-group-item">${type}</a>
             </div>

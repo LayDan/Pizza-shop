@@ -1,14 +1,16 @@
 package application.controller;
 
+import application.domain.LocaleMessage;
 import application.service.IProductService;
 import application.service.IUserProfileService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Locale;
 
 @Controller
 @Api(value = "Account resources")
@@ -25,6 +27,14 @@ public class AccountPage {
 
     @GetMapping("/account")
     public String account(Model model) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute("catalog",localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
+        model.addAttribute("account",localeMessage.getMessage(Locale.getDefault(), "label.account"));
+        model.addAttribute("basket",localeMessage.getMessage(Locale.getDefault(), "label.basket"));
+        model.addAttribute("registration",localeMessage.getMessage(Locale.getDefault(), "label.registration"));
+
+        model.addAttribute("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
+        model.addAttribute("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
         if (iUserProfileService.getCurrentUser() != null) {
             model.addAttribute("infoUser", iUserProfileService.getCurrentUser());
             return "account";
@@ -35,6 +45,14 @@ public class AccountPage {
 
     @GetMapping("/basket")
     public String getBasket(Model model) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute("catalog",localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
+        model.addAttribute("account",localeMessage.getMessage(Locale.getDefault(), "label.account"));
+        model.addAttribute("basket",localeMessage.getMessage(Locale.getDefault(), "label.basket"));
+        model.addAttribute("registration",localeMessage.getMessage(Locale.getDefault(), "label.registration"));
+
+        model.addAttribute("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
+        model.addAttribute("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
         model.addAttribute("basket", iUserProfileService.getCurrentUser().getBasket());
         model.addAttribute("money", iUserProfileService.money());
         return "basket";

@@ -10,6 +10,5 @@ Main Page
 <tr>
     <td><#list infoUser.roles as role>${role}<#sep>,</#list></td>
 </tr>
-
-<a href="/katalog">Katalog</a>
+<a href="/katalog">${catalog}</a>
 </@C.page>

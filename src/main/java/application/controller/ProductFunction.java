@@ -18,6 +18,8 @@ import java.util.LinkedHashMap;
 @Controller
 public class ProductFunction {
 
+
+
     private ProductRepository productRepository;
     private IProductService iproductService;
 
@@ -30,6 +32,7 @@ public class ProductFunction {
 
     @GetMapping("/addProduct")
     public String addProduct(Model model, @RequestParam(value = "size", defaultValue = "1") String size) {
+
         if (arr.size() != Integer.parseInt(size)) {
             arr.clear();
             for (int i = 1; i < Integer.parseInt(size) + 1; i++) {
@@ -58,7 +61,7 @@ public class ProductFunction {
             product.setPriceFromSize(map);
             iproductService.addProduct(product, file);
             model.addAttribute("AllProduct", productRepository.findAll());
-            model.addAttribute("catalog", TypeProduct.values());
+            model.addAttribute("types", TypeProduct.values());
             arr.clear();
             return "katalog";
         } else {
@@ -77,14 +80,14 @@ public class ProductFunction {
     public String postEditProduct(Model model, @RequestParam(name = "productId") Product product, Double stock, String name) {
         iproductService.editProduct(product, stock, name);
         model.addAttribute("AllProduct", productRepository.findAll());
-        model.addAttribute("catalog", TypeProduct.values());
+        model.addAttribute("types", TypeProduct.values());
         return "katalog";
     }
     @GetMapping("/delete")
     public String deleteProduct(Model model, @RequestParam(name = "productId") Product product) {
         iproductService.deleteProduct(product.getId());
         model.addAttribute("AllProduct", productRepository.findAll());
-        model.addAttribute("catalog", TypeProduct.values());
+        model.addAttribute("types", TypeProduct.values());
         return "katalog";
     }
 

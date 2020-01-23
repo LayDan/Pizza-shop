@@ -12,25 +12,25 @@
             <#if isAdmin>
             <li class="nav-item dropdown">
                 <a href="/katalog" class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Каталог</a>
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${catalog}</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/katalog">Каталог</a>
+                    <a class="dropdown-item" href="/katalog">${catalog}</a>
                     <a class="dropdown-item" href="/addProduct?size=1">Добавить товар</a>
                 </div>
             </li>
             <#else>
             <li class="nav-item">
                 <a class="nav-link" href="/katalog" id="navbarDropdown2" role="button"
-                   aria-haspopup="true" aria-expanded="false">Каталог</a>
+                   aria-haspopup="true" aria-expanded="false">${catalog}</a>
             </li>
             </#if>
             <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="/account" id="navbarDropdown1" role="button"
-               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Аккаунт</a>
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${account}</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/account">Личный кабинет</a>
+                <a class="dropdown-item" href="/account">${account}</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="/basket">Корзина</a>
+                <a class="dropdown-item" href="/basket">${basket}</a>
             </div>
         </li>
     </div>
@@ -38,8 +38,8 @@
     <div class="navbar-text mr-3">${name}</div>
     <@l.logout/>
     <#else>
-    <a href="/login" class="btn btn-info mr-3">Login</a>
-    <a href="/registration" class="btn btn-info mr-3">Registration</a>
+    <a href="/login" class="btn btn-info mr-3">${login}</a>
+    <a href="/registration" class="btn btn-info mr-3">${registration}</a>
 </#if>
 </nav>
 
