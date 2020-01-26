@@ -5,4 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
     UserProfile findByUsername(String username);
+
+    UserProfile findByMail(String mail);
+
+    UserProfile findByActivationCode(String code);
 }

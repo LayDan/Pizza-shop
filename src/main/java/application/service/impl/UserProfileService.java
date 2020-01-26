@@ -5,6 +5,8 @@ import application.domain.Role;
 import application.domain.UserProfile;
 import application.repository.UserProfileRepository;
 import application.service.IUserProfileService;
+import application.service.MailSender;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,9 +14,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class UserProfileService implements UserDetailsService, IUserProfileService {
@@ -23,10 +27,14 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
 
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private MailSender mailSender;
+
     public UserProfileService(UserProfileRepository userProfileRepository, PasswordEncoder passwordEncoder) {
         this.userProfileRepository = userProfileRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
 
     @Transactional
     @Override
@@ -43,18 +51,35 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
     @Transactional
     @Override
     public UserProfile addUser(UserProfile userProfile) {
-        UserProfile newUser = UserProfile.builder()
-                .firstName(userProfile.getFirstName())
-                .lastName(userProfile.getLastName())
-                .active(true)
-                .bonus(0)
-                .username(userProfile.getUsername())
-                .password(passwordEncoder.encode(userProfile.getPassword()))
-                .roles(Collections.singleton(Role.USER))
-                .basket(new ArrayList<>())
-                .build();
-        userProfileRepository.saveAndFlush(newUser);
-        return newUser;
+        if (userProfile != userProfileRepository.findByUsername(userProfile.getUsername()) &&
+                userProfile != userProfileRepository.findByMail(userProfile.getMail())) {
+            UserProfile newUser = UserProfile.builder()
+                    .firstName(userProfile.getFirstName())
+                    .lastName(userProfile.getLastName())
+                    .active(true)
+                    .bonus(0)
+                    .username(userProfile.getUsername())
+                    .password(passwordEncoder.encode(userProfile.getPassword()))
+                    .roles(Collections.singleton(Role.USER))
+                    .activationCode(UUID.randomUUID().toString())
+                    .basket(new ArrayList<>())
+                    .mail(userProfile.getMail())
+                    .build();
+            userProfileRepository.save(newUser);
+
+            if (!StringUtils.isEmpty(newUser.getMail())) {
+                String message = String.format(
+                        "Hello %s\n" +
+                                "Please, visit next link: http://localhost:8080/activate/%s",
+                        newUser.getUsername(),
+                        newUser.getActivationCode()
+                );
+
+                mailSender.send(newUser.getMail(), "Activation code", message);
+                return newUser;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -71,5 +96,20 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
             money = money + p.getPrice();
         }
         return money;
+    }
+
+    @Override
+    public boolean activateUser(String code) {
+        UserProfile user = userProfileRepository.findByActivationCode(code);
+
+        if (user == null) {
+            return false;
+        }
+
+        user.setActivationCode(null);
+
+        userProfileRepository.save(user);
+
+        return true;
     }
 }

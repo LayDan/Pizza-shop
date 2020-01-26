@@ -7,4 +7,6 @@ public interface IUserProfileService {
     UserProfile addUser(UserProfile userProfile);
     UserProfile getCurrentUser();
     Double money();
+
+    boolean activateUser(String code);
 }

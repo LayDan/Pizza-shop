@@ -5,6 +5,8 @@ create table user_profile (
     last_name varchar(255),
     password varchar(255),
     username varchar(255),
+    activation_code varchar(255),
+    mail varchar(255),
     primary key (id)
 );
 create table user_profile_roles (

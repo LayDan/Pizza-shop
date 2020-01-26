@@ -35,6 +35,10 @@ public class UserProfile implements UserDetails {
     private String firstName;
     @ApiModelProperty(value = "lastName")
     private String lastName;
+    @ApiModelProperty(value = "mail")
+    private String mail;
+    @ApiModelProperty(value = "activationCode")
+    private String activationCode;
     @ElementCollection(targetClass = Product.class, fetch = FetchType.LAZY)
     @CollectionTable(name = "UserProfile_basket", joinColumns = @JoinColumn(name = "UserProfile_id"))
     @NonNull

@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private PasswordEncoder passwordEncoder;
 
     @Bean
-    public PasswordEncoder getPasswordEncoder(){
+    public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder(8);
     }
 
@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/main", "/registration","/h2-console/**","/katalog/**" , "/static/**","/images/**").permitAll()
+                .antMatchers("/main", "/registration", "/h2-console/**", "/katalog/**", "/static/**", "/images/**", "/activate/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf().ignoringAntMatchers("/h2-console/**")
@@ -51,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll();
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userProfileService)
