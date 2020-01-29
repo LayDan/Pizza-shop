@@ -56,7 +56,7 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
             UserProfile newUser = UserProfile.builder()
                     .firstName(userProfile.getFirstName())
                     .lastName(userProfile.getLastName())
-                    .active(true)
+                    .active(false)
                     .bonus(0)
                     .username(userProfile.getUsername())
                     .password(passwordEncoder.encode(userProfile.getPassword()))
@@ -104,6 +104,7 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
 
         if (user.isPresent()) {
             user.get().setActivationCode(null);
+            user.get().setActive(true);
             userProfileRepository.save(user.get());
             return true;
         } else {
