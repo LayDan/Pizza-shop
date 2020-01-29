@@ -5,8 +5,6 @@ import application.domain.Role;
 import application.domain.UserProfile;
 import application.repository.UserProfileRepository;
 import application.service.IUserProfileService;
-import application.service.MailSender;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,32 +26,33 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
 
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
     private MailSender mailSender;
 
-    public UserProfileService(UserProfileRepository userProfileRepository, PasswordEncoder passwordEncoder) {
+    public UserProfileService(UserProfileRepository userProfileRepository, PasswordEncoder passwordEncoder, MailSender mailSender) {
         this.userProfileRepository = userProfileRepository;
         this.passwordEncoder = passwordEncoder;
+        this.mailSender = mailSender;
     }
-
 
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userProfileRepository.findByUsername(username);
+        Optional<UserProfile> userProfile = userProfileRepository.findByUsername(username);
+        return userProfile.orElse(null);
     }
 
     @Transactional
     @Override
     public boolean findByUsername(String username) {
-        return userProfileRepository.findByUsername(username) != null;
+        return userProfileRepository.findByUsername(username).isPresent();
     }
 
     @Transactional
     @Override
     public UserProfile addUser(UserProfile userProfile) {
-        if (userProfile != userProfileRepository.findByUsername(userProfile.getUsername()) &&
-                userProfile != userProfileRepository.findByMail(userProfile.getMail())) {
+        Optional<UserProfile> profile = userProfileRepository.findByUsername(userProfile.getUsername());
+        Optional<UserProfile> byMail = userProfileRepository.findByMail(userProfile.getMail());
+        if (!profile.isPresent() && !byMail.isPresent()) {
             UserProfile newUser = UserProfile.builder()
                     .firstName(userProfile.getFirstName())
                     .lastName(userProfile.getLastName())
@@ -100,16 +100,14 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
 
     @Override
     public boolean activateUser(String code) {
-        UserProfile user = userProfileRepository.findByActivationCode(code);
+        Optional<UserProfile> user = userProfileRepository.findByActivationCode(code);
 
-        if (user == null) {
+        if (user.isPresent()) {
+            user.get().setActivationCode(null);
+            userProfileRepository.save(user.get());
+            return true;
+        } else {
             return false;
         }
-
-        user.setActivationCode(null);
-
-        userProfileRepository.save(user);
-
-        return true;
     }
 }

@@ -4,8 +4,12 @@ import application.domain.Product;
 import application.domain.TypeProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
-    Product findProductById(Long id);
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-    Product[] findAllByType(TypeProduct type);
+public interface ProductRepository extends JpaRepository<Product, Long> {
+    Optional<Product> findProductById(Long id);
+
+    ArrayList<Product> findAllByType(TypeProduct type);
 }

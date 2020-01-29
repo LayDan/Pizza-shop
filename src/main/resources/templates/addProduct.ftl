@@ -21,8 +21,7 @@
         </tr>
         <#assign
         size=i+1
-        num="/addProduct?size="+size
-        >
+        num="/addProduct?size="+size >
         </#list>
     </table>
     <a name="size" href=${num}>Добавить</a>

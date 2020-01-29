@@ -22,11 +22,13 @@ public class MailConfig {
     @Value("${spring.mail.port}")
     private int port;
 
-    @Value("${spring.mail.protocol}")
+    @Value("${spring.mail.transport.protocol}")
     private String protocol;
 
-    @Value("${mail.debug}")
+    @Value("${spring.mail.debug}")
     private String debug;
+    @Value("${spring.mail.auth")
+    private String auth;
 
     @Bean
     public JavaMailSender getMailSender() {
@@ -40,7 +42,9 @@ public class MailConfig {
 
         properties.setProperty("mail.transport.protocol", protocol);
         properties.setProperty("mail.debug", debug);
-        properties.setProperty("mail.smtp.auth", "true");
+        properties.setProperty("mail.smtp.auth", auth);
+        mailSender.setJavaMailProperties(properties);
+
 
         return mailSender;
     }

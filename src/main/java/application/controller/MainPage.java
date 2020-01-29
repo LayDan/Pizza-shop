@@ -3,6 +3,7 @@ package application.controller;
 import application.domain.LocaleMessage;
 import application.domain.UserProfile;
 import application.service.IUserProfileService;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Locale;
-import java.util.Map;
 
 @Controller
 public class MainPage {
@@ -23,40 +23,29 @@ public class MainPage {
 
 
     @GetMapping("/login")
-    public String startLogin(Map<String, Object> model) {
+    public String startLogin(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
-        model.put("catalog", localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
-        model.put("account", localeMessage.getMessage(Locale.getDefault(), "label.account"));
-        model.put("basket", localeMessage.getMessage(Locale.getDefault(), "label.basket"));
-        model.put("registration", localeMessage.getMessage(Locale.getDefault(), "label.registration"));
-
-        model.put("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
-        model.put("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
+        model.addAttribute(localeMessage.navBar(model, LocaleContextHolder.getLocale()));
         return "login";
     }
 
 
     @GetMapping("/registration")
-    public String startRegistration(Map<String, Object> model) {
+    public String startRegistration(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
-        model.put("email", localeMessage.getMessage(Locale.getDefault(), "label.email"));
-        model.put("catalog", localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
-        model.put("account", localeMessage.getMessage(Locale.getDefault(), "label.account"));
-        model.put("basket", localeMessage.getMessage(Locale.getDefault(), "label.basket"));
-        model.put("registration", localeMessage.getMessage(Locale.getDefault(), "label.registration"));
-
-        model.put("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
-        model.put("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
-        model.put("lastName", localeMessage.getMessage(Locale.getDefault(), "label.lastName"));
-        model.put("firstName", localeMessage.getMessage(Locale.getDefault(), "label.firstName"));
-
+        model.addAttribute(localeMessage.navBar(model, locale));
+        model.addAttribute(localeMessage.registration(model,locale));
         return "registration";
     }
 
     @PostMapping("/registration")
-    public String endRegistration(Model model, UserProfile user) {
+    public String endRegistration(Model model, UserProfile user, Locale locale) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute(localeMessage.navBar(model, locale));
+        model.addAttribute(localeMessage.registration(model, locale));
         if (iUserProfileService.findByUsername(user.getUsername())) {
             model.addAttribute("info", "User exist");
+            return "registration";
         } else {
             iUserProfileService.addUser(user);
         }
@@ -64,15 +53,9 @@ public class MainPage {
     }
 
     @GetMapping("/")
-    public String gretting(Model model) {
+    public String gretting(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
-        model.addAttribute("catalog", localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
-        model.addAttribute("account", localeMessage.getMessage(Locale.getDefault(), "label.account"));
-        model.addAttribute("basket", localeMessage.getMessage(Locale.getDefault(), "label.basket"));
-        model.addAttribute("registration", localeMessage.getMessage(Locale.getDefault(), "label.registration"));
-
-        model.addAttribute("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
-        model.addAttribute("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
+        model.addAttribute(localeMessage.navBar(model, locale));
         if (iUserProfileService.getCurrentUser() != null) {
             model.addAttribute("infoUser", iUserProfileService.getCurrentUser());
         }
@@ -80,15 +63,9 @@ public class MainPage {
     }
 
     @GetMapping("/main")
-    public String mainWindow2(Model model) {
+    public String mainWindow2(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
-        model.addAttribute("catalog", localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
-        model.addAttribute("account", localeMessage.getMessage(Locale.getDefault(), "label.account"));
-        model.addAttribute("basket", localeMessage.getMessage(Locale.getDefault(), "label.basket"));
-        model.addAttribute("registration", localeMessage.getMessage(Locale.getDefault(), "label.registration"));
-
-        model.addAttribute("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
-        model.addAttribute("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
+        model.addAttribute(localeMessage.navBar(model, locale));
         if (iUserProfileService.getCurrentUser() != null) {
             model.addAttribute("infoUser", iUserProfileService.getCurrentUser());
         }
@@ -96,7 +73,9 @@ public class MainPage {
     }
 
     @GetMapping("/activate/{code}")
-    public String activate(Model model, @PathVariable String code) {
+    public String activate(Model model, @PathVariable String code, Locale locale) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute(localeMessage.navBar(model, locale));
         boolean isActivated = iUserProfileService.activateUser(code);
 
         if (isActivated) {

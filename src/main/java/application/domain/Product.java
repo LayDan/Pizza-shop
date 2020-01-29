@@ -20,7 +20,8 @@ public class Product {
     private Double price;
     private String imagePath;
     private Double stock;
-    @Enumerated(EnumType.STRING)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "type", referencedColumnName = "type")
     private TypeProduct type;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Product_priceFromSize", joinColumns = @JoinColumn(name = "Product_id"))

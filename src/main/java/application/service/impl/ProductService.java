@@ -4,6 +4,7 @@ import application.domain.Product;
 import application.domain.TypeProduct;
 import application.domain.UserProfile;
 import application.repository.ProductRepository;
+import application.repository.TypeProductRepository;
 import application.repository.UserProfileRepository;
 import application.service.IProductService;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,9 +28,12 @@ public class ProductService implements IProductService {
 
     private UserProfileRepository userProfileRepository;
 
-    public ProductService(ProductRepository productRepository, UserProfileRepository userProfileRepository) {
+    private TypeProductRepository typeProductRepository;
+
+    public ProductService(ProductRepository productRepository, UserProfileRepository userProfileRepository, TypeProductRepository typeProductRepository) {
         this.productRepository = productRepository;
         this.userProfileRepository = userProfileRepository;
+        this.typeProductRepository = typeProductRepository;
     }
 
     @Override
@@ -70,22 +74,22 @@ public class ProductService implements IProductService {
 
     @Override
     public Product editProduct(Product product, Double stock, String name) {
-        Product cheekProduct = productRepository.findProductById(product.getId());
-        if (name == null && cheekProduct != null) {
-            name = cheekProduct.getName();
+        Optional<Product> cheekProduct = productRepository.findProductById(product.getId());
+        if (name == null && cheekProduct.isPresent()) {
+            name = cheekProduct.get().getName();
         }
         if (stock == null) {
             stock = 0.0;
         }
-        if (cheekProduct != null) {
-            cheekProduct.setName(name);
-            cheekProduct.setStock(stock);
-            for (String a : cheekProduct.getPriceFromSize().keySet()) {
-                Double b = cheekProduct.getPriceFromSize().get(a);
-                cheekProduct.getPriceFromSize().replace(a, b, b - (b * (stock / 100)));
+        if (cheekProduct.isPresent()) {
+            cheekProduct.get().setName(name);
+            cheekProduct.get().setStock(stock);
+            for (String a : cheekProduct.get().getPriceFromSize().keySet()) {
+                Double b = cheekProduct.get().getPriceFromSize().get(a);
+                cheekProduct.get().getPriceFromSize().replace(a, b, b - (b * (stock / 100)));
             }
-            productRepository.save(cheekProduct);
-            return cheekProduct;
+            productRepository.save(cheekProduct.get());
+            return cheekProduct.get();
         } else {
             return null;
         }
@@ -93,17 +97,15 @@ public class ProductService implements IProductService {
 
     @Override
     public void deleteProduct(Long id) {
-        Product product = productRepository.findProductById(id);
-        if (product != null) {
-            productRepository.delete(productRepository.findProductById(id));
-        }
+        Optional<Product> product = productRepository.findProductById(id);
+        product.ifPresent(value -> productRepository.delete(value));
     }
 
     @Override
     public void addToCart(UserProfile userProfile, Product product, Double price) {
-        UserProfile cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
-        Product cheekProduct = productRepository.findProductById(product.getId());
-        if (cheekUser != null && cheekProduct != null) {
+        Optional<UserProfile> cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
+        Optional<Product> cheekProduct = productRepository.findProductById(product.getId());
+        if (cheekUser.isPresent() && cheekProduct.isPresent()) {
             product.setPrice(price);
             userProfile.getBasket().add(product);
             userProfileRepository.save(userProfile);
@@ -112,10 +114,10 @@ public class ProductService implements IProductService {
 
     @Override
     public Double buyProduct(UserProfile userProfile, Double delivery) {
-        UserProfile cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
-        if (cheekUser != null && !cheekUser.getBasket().isEmpty()) {
+        Optional<UserProfile> cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
+        if (cheekUser.isPresent() && !cheekUser.get().getBasket().isEmpty()) {
             Double money = 0.00;
-            for (Product a : cheekUser.getBasket()) {
+            for (Product a : cheekUser.get().getBasket()) {
                 money = money + a.getPrice();
             }
             userProfile.getBasket().clear();
@@ -128,9 +130,12 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> sortType(String type) {
-        for (TypeProduct a : TypeProduct.values()) {
-            if (a.name().equals(type)) {
-                return Arrays.asList(productRepository.findAllByType(a));
+        if (type == null) {
+            return productRepository.findAll();
+        }
+        for (TypeProduct a : typeProductRepository.findAll()) {
+            if (a.getType().equals(type)) {
+                return productRepository.findAllByType(typeProductRepository.findByType(type).get());
             }
         }
         return productRepository.findAll();

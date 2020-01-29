@@ -16,25 +16,19 @@ import java.util.Locale;
 @Api(value = "Account resources")
 public class AccountPage {
 
-    public AccountPage(IUserProfileService iUserProfileService, IProductService iProductService) {
-        this.iProductService = iProductService;
-        this.iUserProfileService = iUserProfileService;
-    }
 
+    public AccountPage(IUserProfileService iUserProfileService, IProductService iProductService) {
+        this.iUserProfileService = iUserProfileService;
+        this.iProductService = iProductService;
+    }
 
     private IUserProfileService iUserProfileService;
     private IProductService iProductService;
 
     @GetMapping("/account")
-    public String account(Model model) {
+    public String account(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
-        model.addAttribute("catalog",localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
-        model.addAttribute("account",localeMessage.getMessage(Locale.getDefault(), "label.account"));
-        model.addAttribute("basket",localeMessage.getMessage(Locale.getDefault(), "label.basket"));
-        model.addAttribute("registration",localeMessage.getMessage(Locale.getDefault(), "label.registration"));
-
-        model.addAttribute("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
-        model.addAttribute("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
+        model.addAttribute(localeMessage.navBar(model, locale));
         if (iUserProfileService.getCurrentUser() != null) {
             model.addAttribute("infoUser", iUserProfileService.getCurrentUser());
             return "account";
@@ -44,28 +38,24 @@ public class AccountPage {
     }
 
     @GetMapping("/basket")
-    public String getBasket(Model model) {
+    public String getBasket(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
-        model.addAttribute("catalog",localeMessage.getMessage(Locale.getDefault(), "label.katalog"));
-        model.addAttribute("account",localeMessage.getMessage(Locale.getDefault(), "label.account"));
-        model.addAttribute("basket",localeMessage.getMessage(Locale.getDefault(), "label.basket"));
-        model.addAttribute("registration",localeMessage.getMessage(Locale.getDefault(), "label.registration"));
-
-        model.addAttribute("login", localeMessage.getMessage(Locale.getDefault(), "label.login"));
-        model.addAttribute("password", localeMessage.getMessage(Locale.getDefault(), "label.password"));
-        model.addAttribute("basket", iUserProfileService.getCurrentUser().getBasket());
+        model.addAttribute(localeMessage.navBar(model, locale));
+        model.addAttribute("productFromBasket", iUserProfileService.getCurrentUser().getBasket());
         model.addAttribute("money", iUserProfileService.money());
         return "basket";
     }
 
     @PostMapping("/basket")
-    public String BuyBasket(Model model, @RequestParam(required = false) String status, @RequestParam(required = false) Double delivery) {
+    public String BuyBasket(Model model, @RequestParam(required = false) String status, @RequestParam(required = false) Double delivery, Locale locale) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute(localeMessage.navBar(model, locale));
         if (status != null) {
             model.addAttribute("success", iProductService.buyProduct(iUserProfileService.getCurrentUser(), delivery));
-            model.addAttribute("basket", iUserProfileService.getCurrentUser().getBasket());
+            model.addAttribute("productFromBasket", iUserProfileService.getCurrentUser().getBasket());
             model.addAttribute("money", iUserProfileService.money());
         } else {
-            model.addAttribute("basket", iUserProfileService.getCurrentUser().getBasket());
+            model.addAttribute("productFromBasket", iUserProfileService.getCurrentUser().getBasket());
             if (delivery != null) {
                 model.addAttribute("success", iUserProfileService.money() + delivery);
             } else {

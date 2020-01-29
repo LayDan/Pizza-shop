@@ -11,7 +11,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yml")
 @EnableSwagger2
 public class Application {
     public static void main(String[] args) {

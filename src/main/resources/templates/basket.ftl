@@ -7,7 +7,7 @@
     <div class="left-column">
         <div class="col-md-8 products">
             <div class="row">
-                <#list basket as b>
+                <#list productFromBasket as b>
                 <div class="col-sm-3 product-wrapper" id="myDIV">
                     <div class="product">
                         <div class="product-img">
@@ -38,5 +38,4 @@
         <input type="hidden" name="status" value=""/>
         <button type="submit">Оформить заказ</button>
     </form>
-</div>
 </@C.page>

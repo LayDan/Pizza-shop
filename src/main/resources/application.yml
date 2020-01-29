@@ -1,0 +1,46 @@
+spring:
+  -datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  -jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: true
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        dialect: org.hibernate.dialect.H2Dialect
+        enable_lazy_load_no_trans: true
+  -mail:
+    host: smtp.gmail.com
+    port: 465
+    auth: true
+    username:
+    password:
+    starttls:
+      enable: true
+    transport:
+      protocol: smtps
+    debug: true
+
+freemarker:
+  expose-request-attribute: true
+
+logging:
+  file: /Users/User/Desktop/app.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  level:
+    ru:
+      leodev: DEBUG
+    org:
+      springframework:
+        web: ERROR
+upload:
+  path: C:/Users/User/Desktop/PizzaShop/upload

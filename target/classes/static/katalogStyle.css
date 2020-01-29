@@ -83,6 +83,11 @@ img {
 	background: linear-gradient(to left top, #fff, rgba(255, 255, 255, 0));
 }
 
+.list-group-item:hover {
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
+    background:silver;
+}
+
 @keyframes nev {
 from {	/* От */
 opacity: 0;	/* полная прозрачность */
