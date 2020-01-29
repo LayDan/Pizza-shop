@@ -51,7 +51,7 @@ public class AccountPage {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         if (status != null) {
-            model.addAttribute("success", iProductService.buyProduct(iUserProfileService.getCurrentUser(), delivery));
+            model.addAttribute("success", iUserProfileService.buyProduct(iUserProfileService.getCurrentUser(), delivery));
             model.addAttribute("productFromBasket", iUserProfileService.getCurrentUser().getBasket());
             model.addAttribute("money", iUserProfileService.money());
         } else {

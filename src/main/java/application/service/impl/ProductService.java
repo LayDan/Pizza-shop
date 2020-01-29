@@ -8,6 +8,7 @@ import application.repository.TypeProductRepository;
 import application.repository.UserProfileRepository;
 import application.service.IProductService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,7 +75,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product editProduct(Product product, Double stock, String name) {
-        Optional<Product> cheekProduct = productRepository.findProductById(product.getId());
+        Optional<Product> cheekProduct = productRepository.findById(product.getId());
         if (name == null && cheekProduct.isPresent()) {
             name = cheekProduct.get().getName();
         }
@@ -97,35 +98,19 @@ public class ProductService implements IProductService {
 
     @Override
     public void deleteProduct(Long id) {
-        Optional<Product> product = productRepository.findProductById(id);
+        Optional<Product> product = productRepository.findById(id);
         product.ifPresent(value -> productRepository.delete(value));
     }
 
     @Override
     public void addToCart(Long id, Product product, Double price) {
         Optional<UserProfile> cheekUser = userProfileRepository.findById(id);
-        Optional<Product> cheekProduct = productRepository.findProductById(product.getId());
+        Optional<Product> cheekProduct = productRepository.findById(product.getId());
         if (cheekUser.isPresent() && cheekProduct.isPresent()) {
             product.setPrice(price);
             cheekUser.get().getBasket().add(product);
             userProfileRepository.save(cheekUser.get());
         }
-    }
-
-    @Override
-    public Double buyProduct(UserProfile userProfile, Double delivery) {
-        Optional<UserProfile> cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
-        if (cheekUser.isPresent() && !cheekUser.get().getBasket().isEmpty()) {
-            Double money = 0.00;
-            for (Product a : cheekUser.get().getBasket()) {
-                money = money + a.getPrice();
-            }
-            userProfile.getBasket().clear();
-            if (delivery != null) {
-                return money + delivery;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -138,6 +123,7 @@ public class ProductService implements IProductService {
                 return productRepository.findAllByType(typeProductRepository.findByType(type).get());
             }
         }
+
         return productRepository.findAll();
     }
 

@@ -5,6 +5,7 @@ import application.domain.Role;
 import application.domain.UserProfile;
 import application.repository.UserProfileRepository;
 import application.service.IUserProfileService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class UserProfileService implements UserDetailsService, IUserProfileService {
 
     private UserProfileRepository userProfileRepository;
@@ -34,20 +36,17 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
         this.mailSender = mailSender;
     }
 
-    @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UserProfile> userProfile = userProfileRepository.findByUsername(username);
         return userProfile.orElse(null);
     }
 
-    @Transactional
     @Override
     public boolean findByUsername(String username) {
         return userProfileRepository.findByUsername(username).isPresent();
     }
 
-    @Transactional
     @Override
     public UserProfile addUser(UserProfile userProfile) {
         Optional<UserProfile> profile = userProfileRepository.findByUsername(userProfile.getUsername());
@@ -82,20 +81,36 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
         return null;
     }
 
+    @CacheEvict(value = {"user"}, allEntries = true)
     @Override
-    @Transactional
     public UserProfile getCurrentUser() {
-        return (UserProfile) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserProfile userProfile = (UserProfile) principal;
+        Optional<UserProfile> byId = userProfileRepository.findById(userProfile.getId());
+        return byId.orElse(null);
     }
 
-    @Transactional
     @Override
     public Double money() {
         Double money = 0.0;
-        for (Product p : getCurrentUser().getBasket()) {
-            money = money + p.getPrice();
+        Optional<UserProfile> byId = userProfileRepository.findById(getCurrentUser().getId());
+        if (byId.isPresent()) {
+            for (Product p : byId.get().getBasket()) {
+                money = money + p.getPrice();
+            }
         }
         return money;
+    }
+
+
+    @Override
+    public Double buyProduct(UserProfile userProfile, Double delivery) {
+        Optional<UserProfile> cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
+        if (cheekUser.isPresent() && !cheekUser.get().getBasket().isEmpty()) {
+            userProfile.getBasket().clear();
+            userProfileRepository.save(userProfile);
+        }
+        return 0.0;
     }
 
     @Override

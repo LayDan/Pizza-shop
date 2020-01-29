@@ -17,8 +17,6 @@ public interface IProductService {
 
     void addToCart(Long id, Product product, Double price);
 
-    Double buyProduct(UserProfile userProfile, Double delivery);
-
     List<Product> sortType(String type);
 
     ArrayList<Product> search(String name);

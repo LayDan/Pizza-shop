@@ -43,19 +43,24 @@ public class ProductFunction {
             }
         }
         model.addAttribute("array", arr);
-        model.addAttribute("types", typeProductRepository.findAllType());
+        model.addAttribute("types", typeProductRepository.findAll());
         return "addProduct";
     }
 
     @PostMapping("/addProduct")
-    public String getAddProduct(Model model, Product product,
+    public String getAddProduct(Model model,
+                                @RequestParam Long code,
+                                @RequestParam String description,
+                                @RequestParam String type,
+                                @RequestParam String name,
                                 @RequestParam("file") MultipartFile file,
                                 @RequestParam(name = "sizeProduct") String[] sizeProduct,
                                 @RequestParam(name = "priceForProduct") Double[] price, Locale locale) throws IOException {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         LinkedHashMap<String, Double> map = new LinkedHashMap<>();
-        if (product != null && sizeProduct.length == price.length) {
+
+        if (sizeProduct.length == price.length) {
             for (int i = 0; i < sizeProduct.length; i++) {
                 if (sizeProduct[i] == null || price[i] == null) {
                     break;
@@ -63,8 +68,17 @@ public class ProductFunction {
                     map.put(sizeProduct[i], price[i]);
                 }
             }
-            product.setPriceFromSize(map);
-            iproductService.addProduct(product, file);
+            if (typeProductRepository.findByType(type).isPresent()) {
+                Product product = Product.builder()
+                        .code(code)
+                        .description(description)
+                        .name(name)
+                        .priceFromSize(map)
+                        .type(typeProductRepository.findByType(type).get())
+                        .build();
+                product.setPriceFromSize(map);
+                iproductService.addProduct(product, file);
+            }
             model.addAttribute("AllProduct", productRepository.findAll());
             model.addAttribute("types", typeProductRepository.findAllType());
             arr.clear();

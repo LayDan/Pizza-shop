@@ -2,6 +2,7 @@ package application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -15,6 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @PropertySource("classpath:application.yml")
 @EnableSwagger2
+@EnableCaching
 public class Application {
 
     public static void main(String[] args) {

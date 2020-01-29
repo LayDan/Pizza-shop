@@ -1,6 +1,6 @@
 <#import "parts/common.ftl" as C>
 <@C.page>
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" xmlns="http://www.w3.org/1999/html">
     <div><label> Code : <input type="number" name="code" placeholder="Code"/> </label></div>
     <div><label> Name: <input type="text" name="name" placeholder="Name"/> </label></div>
     <div>Description:<textarea name="description"> </textarea></div>
@@ -26,11 +26,10 @@
     </table>
     <a name="size" href=${num}>Добавить</a>
 
-
     <div><label> Type:
         <select name="type">
             <#list types as type>
-            <option name="type">${type}</option>
+            <option name="type"> ${type.type} </option>
             <#else>
             none
         </#list>
