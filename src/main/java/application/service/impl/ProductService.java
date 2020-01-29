@@ -102,13 +102,13 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void addToCart(UserProfile userProfile, Product product, Double price) {
-        Optional<UserProfile> cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
+    public void addToCart(Long id, Product product, Double price) {
+        Optional<UserProfile> cheekUser = userProfileRepository.findById(id);
         Optional<Product> cheekProduct = productRepository.findProductById(product.getId());
         if (cheekUser.isPresent() && cheekProduct.isPresent()) {
             product.setPrice(price);
-            userProfile.getBasket().add(product);
-            userProfileRepository.save(userProfile);
+            cheekUser.get().getBasket().add(product);
+            userProfileRepository.save(cheekUser.get());
         }
     }
 

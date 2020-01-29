@@ -71,7 +71,7 @@ public class KatalogPage {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         if (priceToBasket != null) {
-            iproductService.addToCart(iUserProfileService.getCurrentUser(), product, priceToBasket);
+            iproductService.addToCart(iUserProfileService.getCurrentUser().getId(), product, priceToBasket);
             model.addAttribute("productFromBasket", iUserProfileService.getCurrentUser().getBasket());
             model.addAttribute("types", typeProductRepository.findAllType());
             model.addAttribute("AllProduct", productRepository.findAll());
