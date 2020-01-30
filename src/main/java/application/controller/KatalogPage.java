@@ -2,7 +2,6 @@ package application.controller;
 
 import application.domain.LocaleMessage;
 import application.domain.Product;
-import application.domain.TypeProduct;
 import application.repository.ProductRepository;
 import application.repository.TypeProductRepository;
 import application.service.IProductService;
@@ -29,6 +28,7 @@ public class KatalogPage {
     private ProductRepository productRepository;
     private IProductService iproductService;
 
+    private String size;
     private String catalog = "catalog";
 
     @GetMapping()
@@ -70,19 +70,21 @@ public class KatalogPage {
     public String getProductSize(Model model, String size, Product product, Double priceToBasket, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
-        if (priceToBasket != null) {
-            iproductService.addToCart(iUserProfileService.getCurrentUser().getId(), product, priceToBasket);
-            model.addAttribute("productFromBasket", iUserProfileService.getCurrentUser().getBasket());
-            model.addAttribute("types", typeProductRepository.findAllType());
-            model.addAttribute("AllProduct", productRepository.findAll());
-            return catalog;
-        }
         if (size != null) {
+            this.size = size;
             Double selectPrice = product.getPriceFromSize().get(size);
             model.addAttribute("price", selectPrice);
             model.addAttribute("product", product);
             model.addAttribute("priceFromSize", product.getPriceFromSize());
             return "productPage";
+        }
+        if (priceToBasket != null) {
+            size = this.size;
+            iproductService.addToCart(iUserProfileService.getCurrentUser().getId(), product, size);
+            model.addAttribute("productFromBasket", iUserProfileService.getCurrentUser().getBasket());
+            model.addAttribute("types", typeProductRepository.findAllType());
+            model.addAttribute("AllProduct", productRepository.findAll());
+            return catalog;
         }
         return "productPage";
     }

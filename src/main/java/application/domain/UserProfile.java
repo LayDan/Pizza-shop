@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -39,11 +39,11 @@ public class UserProfile implements UserDetails {
     private String mail;
     @ApiModelProperty(value = "activationCode")
     private String activationCode;
-    @ElementCollection(targetClass = Product.class, fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "UserProfile_basket", joinColumns = @JoinColumn(name = "UserProfile_id"))
     @NonNull
     @ApiModelProperty(value = "basket")
-    private List<Product> basket;
+    private Map<String, Product> basket;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_profile_roles", joinColumns = @JoinColumn(name = "user_profile_id"))

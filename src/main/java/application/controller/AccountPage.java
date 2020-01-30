@@ -41,7 +41,8 @@ public class AccountPage {
     public String getBasket(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
-        model.addAttribute("productFromBasket", iUserProfileService.getCurrentUser().getBasket());
+
+        model.addAttribute("productFromBasket", iUserProfileService.getBasketToPage());
         model.addAttribute("money", iUserProfileService.money());
         return "basket";
     }

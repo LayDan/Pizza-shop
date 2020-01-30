@@ -8,7 +8,6 @@ import application.repository.TypeProductRepository;
 import application.repository.UserProfileRepository;
 import application.service.IProductService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -102,13 +101,13 @@ public class ProductService implements IProductService {
         product.ifPresent(value -> productRepository.delete(value));
     }
 
+
     @Override
-    public void addToCart(Long id, Product product, Double price) {
+    public void addToCart(Long id, Product product, String key) {
         Optional<UserProfile> cheekUser = userProfileRepository.findById(id);
         Optional<Product> cheekProduct = productRepository.findById(product.getId());
         if (cheekUser.isPresent() && cheekProduct.isPresent()) {
-            product.setPrice(price);
-            cheekUser.get().getBasket().add(product);
+            cheekUser.get().getBasket().put(key, cheekProduct.get());
             userProfileRepository.save(cheekUser.get());
         }
     }
@@ -119,11 +118,11 @@ public class ProductService implements IProductService {
             return productRepository.findAll();
         }
         for (TypeProduct a : typeProductRepository.findAll()) {
-            if (a.getType().equals(type)) {
-                return productRepository.findAllByType(typeProductRepository.findByType(type).get());
+            Optional<TypeProduct> byType = typeProductRepository.findByType(type);
+            if (a.getType().equals(type) && byType.isPresent()) {
+                return productRepository.findAllByType(byType.get());
             }
         }
-
         return productRepository.findAll();
     }
 

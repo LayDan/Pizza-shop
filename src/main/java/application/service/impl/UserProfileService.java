@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -61,7 +58,7 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
                     .password(passwordEncoder.encode(userProfile.getPassword()))
                     .roles(Collections.singleton(Role.USER))
                     .activationCode(UUID.randomUUID().toString())
-                    .basket(new ArrayList<>())
+                    .basket(new LinkedHashMap<>())
                     .mail(userProfile.getMail())
                     .build();
             userProfileRepository.save(newUser);
@@ -93,11 +90,9 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
     @Override
     public Double money() {
         Double money = 0.0;
-        Optional<UserProfile> byId = userProfileRepository.findById(getCurrentUser().getId());
-        if (byId.isPresent()) {
-            for (Product p : byId.get().getBasket()) {
-                money = money + p.getPrice();
-            }
+        Map<String, Product> basket = getCurrentUser().getBasket();
+        for (Map.Entry<String, Product> s : basket.entrySet()) {
+            money = money + basket.get(s.getKey()).getPriceFromSize().get(s.getKey());
         }
         return money;
     }
@@ -125,5 +120,24 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
         } else {
             return false;
         }
+    }
+
+    @Override
+    public Map<String, Product> getBasketToPage() {
+        Map<String, Product> array = new LinkedHashMap<>();
+        Product product;
+        String key;
+        Double delivery;
+        for (Map.Entry<String, Product> a : getCurrentUser().getBasket().entrySet()) {
+            product = a.getValue();
+            key = a.getKey();
+            if (a.getValue().getStock() != null && a.getValue().getStock() != 0.0) {
+                delivery = product.getPriceFromSize().get(key) * (product.getStock() / 100);
+                array.put(String.valueOf(delivery), product);
+            } else {
+                array.put(String.valueOf(product.getPriceFromSize().get(key)), product);
+            }
+        }
+        return array;
     }
 }

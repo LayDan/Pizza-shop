@@ -1,11 +1,11 @@
 package application.service;
 
 import application.domain.Product;
-import application.domain.UserProfile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public interface IProductService {
@@ -15,10 +15,12 @@ public interface IProductService {
 
     void deleteProduct(Long id);
 
-    void addToCart(Long id, Product product, Double price);
+    void addToCart(Long id, Product product, String price);
 
     List<Product> sortType(String type);
 
     ArrayList<Product> search(String name);
+
+
 
 }

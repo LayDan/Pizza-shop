@@ -7,18 +7,19 @@
     <div class="left-column">
         <div class="col-md-8 products">
             <div class="row">
-                <#list productFromBasket as b>
+                <#list productFromBasket?keys as key>
+
                 <div class="col-sm-3 product-wrapper" id="myDIV">
                     <div class="product">
                         <div class="product-img">
-                            <input type="hidden" name="checked" value=${b.id}/>
-                            <img src="/images/${b.imagePath}">
+                            <input type="hidden" name="checked" value=${productFromBasket[key].id}/>
+                            <img src="/images/${productFromBasket[key].imagePath}">
                         </div>
                         <div class="product-title">
-                            ${b.name}
+                            ${productFromBasket[key].name}
                         </div>
                         <div class="product-price">
-                            ${b.price}
+                            ${key}
                         </div>
                     </div>
                 </div>
