@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 
 public class LocaleMessage {
 
-    public String getMessage(Locale locale, String key) {
+    private String getMessage(Locale locale, String key) {
         ResourceBundle rb = ResourceBundle.getBundle("messageResource", locale);
         for (String a : rb.keySet()) {
             if (a.equals(key)) {

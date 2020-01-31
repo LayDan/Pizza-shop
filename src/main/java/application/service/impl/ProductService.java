@@ -1,13 +1,15 @@
 package application.service.impl;
 
+import application.domain.Basket;
 import application.domain.Product;
 import application.domain.TypeProduct;
-import application.domain.UserProfile;
+import application.repository.BasketRepository;
 import application.repository.ProductRepository;
 import application.repository.TypeProductRepository;
 import application.repository.UserProfileRepository;
 import application.service.IProductService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,10 +32,13 @@ public class ProductService implements IProductService {
 
     private TypeProductRepository typeProductRepository;
 
-    public ProductService(ProductRepository productRepository, UserProfileRepository userProfileRepository, TypeProductRepository typeProductRepository) {
+    private BasketRepository basketRepository;
+
+    public ProductService(ProductRepository productRepository, UserProfileRepository userProfileRepository, TypeProductRepository typeProductRepository, BasketRepository basketRepository) {
         this.productRepository = productRepository;
         this.userProfileRepository = userProfileRepository;
         this.typeProductRepository = typeProductRepository;
+        this.basketRepository = basketRepository;
     }
 
     @Override
@@ -47,7 +52,7 @@ public class ProductService implements IProductService {
         String uuidFile = UUID.randomUUID().toString();
         String resultFilename = uuidFile + "." + file.getOriginalFilename();
 
-        file.transferTo(new File(uploadPath + "/" + resultFilename));
+        file.transferTo(new File(String.format("%s/%s", uploadPath, resultFilename)));
 
         LinkedHashMap<String, Double> newMap = product.getPriceFromSize().entrySet()
                 .stream()
@@ -72,10 +77,12 @@ public class ProductService implements IProductService {
 
     }
 
+    @CacheEvict(value = {"user"}, allEntries = true)
     @Override
     public Product editProduct(Product product, Double stock, String name) {
         Optional<Product> cheekProduct = productRepository.findById(product.getId());
-        if (name == null && cheekProduct.isPresent()) {
+
+        if (cheekProduct.isPresent() && (name == null || name.equals(""))) {
             name = cheekProduct.get().getName();
         }
         if (stock == null) {
@@ -84,12 +91,7 @@ public class ProductService implements IProductService {
         if (cheekProduct.isPresent()) {
             cheekProduct.get().setName(name);
             cheekProduct.get().setStock(stock);
-            for (String a : cheekProduct.get().getPriceFromSize().keySet()) {
-                Double b = cheekProduct.get().getPriceFromSize().get(a);
-                cheekProduct.get().getPriceFromSize().replace(a, b, b - (b * (stock / 100)));
-            }
-            productRepository.save(cheekProduct.get());
-            return cheekProduct.get();
+            return productRepository.save(cheekProduct.get());
         } else {
             return null;
         }
@@ -101,14 +103,11 @@ public class ProductService implements IProductService {
         product.ifPresent(value -> productRepository.delete(value));
     }
 
-
+    @CacheEvict(value = {"user"}, allEntries = true)
     @Override
-    public void addToCart(Long id, Product product, String key) {
-        Optional<UserProfile> cheekUser = userProfileRepository.findById(id);
-        Optional<Product> cheekProduct = productRepository.findById(product.getId());
-        if (cheekUser.isPresent() && cheekProduct.isPresent()) {
-            cheekUser.get().getBasket().put(key, cheekProduct.get());
-            userProfileRepository.save(cheekUser.get());
+    public void addToCart(Basket basket) {
+        if (basket != null) {
+            basket.getUserProfile().getBasket().add(basket);
         }
     }
 
@@ -128,17 +127,20 @@ public class ProductService implements IProductService {
 
     @Override
     public ArrayList<Product> search(String name) {
+        if (name != null && !name.equals("")) {
+            return findByName(name);
+        } else {
+            return (ArrayList<Product>) productRepository.findAll();
+        }
+    }
+
+    private ArrayList<Product> findByName(String name) {
         char[] arrName = name.toLowerCase().toCharArray();
         ArrayList<Product> arr = new ArrayList<>();
         for (Product p : productRepository.findAll()) {
             char[] product = p.getName().toLowerCase().toCharArray();
             for (int i = 0; i < arrName.length; i++) {
-                if (arrName[i] != product[i]) {
-                    break;
-                }
-                if (i == arrName.length - 1 && arrName[i] == product[i]) {
-                    arr.add(p);
-                } else if (i == product.length - 1 && arrName[i] == product[i]) {
+                if (arrName[i] == product[i] && (i == product.length - 1 || i == arrName.length - 1)) {
                     arr.add(p);
                     break;
                 }

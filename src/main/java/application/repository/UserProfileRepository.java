@@ -32,7 +32,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     @Override
     <S extends UserProfile> S save(S s);
 
-    @Cacheable("user")
+    @CachePut("user")
     @Override
     Optional<UserProfile> findById(Long aLong);
 

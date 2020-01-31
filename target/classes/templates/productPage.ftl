@@ -22,7 +22,12 @@
         </form>
         <div class="price">
             <#if price??>
+            <#if newPrice??>
+            Price = <strike>${price}</strike><br>
+            New price = ${newPrice}
+            <#else>
             Price = ${price}
+            </#if>
             <form method="post">
                 <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                 <button class="btn btn-success selected" type="submit" value="${price}" name="priceToBasket">Добавить в корзину</button>

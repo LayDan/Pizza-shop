@@ -29,6 +29,6 @@ public interface TypeProductRepository extends JpaRepository<TypeProduct, Long> 
     List<TypeProduct> findAll();
 
     @Override
-    @CacheEvict(value = {"types","typesValue"}, allEntries = true)
+    @CacheEvict(value = {"types", "typesValue"}, allEntries = true)
     <S extends TypeProduct> S saveAndFlush(S s);
 }

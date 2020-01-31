@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -16,6 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @PropertySource("classpath:application.yml")
 @EnableSwagger2
+@EnableScheduling
 @EnableCaching
 public class Application {
 
@@ -32,6 +34,7 @@ public class Application {
                 .build()
                 .apiInfo(apiInfo());
     }
+
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()

@@ -1,11 +1,14 @@
 package application.service.impl;
 
+import application.domain.Basket;
 import application.domain.Product;
 import application.domain.Role;
 import application.domain.UserProfile;
+import application.repository.BasketRepository;
 import application.repository.UserProfileRepository;
 import application.service.IUserProfileService;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,10 +31,13 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
 
     private MailSender mailSender;
 
-    public UserProfileService(UserProfileRepository userProfileRepository, PasswordEncoder passwordEncoder, MailSender mailSender) {
+    private BasketRepository basketRepository;
+
+    public UserProfileService(UserProfileRepository userProfileRepository, PasswordEncoder passwordEncoder, MailSender mailSender, BasketRepository basketRepository) {
         this.userProfileRepository = userProfileRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
+        this.basketRepository = basketRepository;
     }
 
     @Override
@@ -58,7 +65,7 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
                     .password(passwordEncoder.encode(userProfile.getPassword()))
                     .roles(Collections.singleton(Role.USER))
                     .activationCode(UUID.randomUUID().toString())
-                    .basket(new LinkedHashMap<>())
+                    .basket(new ArrayList<>())
                     .mail(userProfile.getMail())
                     .build();
             userProfileRepository.save(newUser);
@@ -81,18 +88,29 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
     @CacheEvict(value = {"user"}, allEntries = true)
     @Override
     public UserProfile getCurrentUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserProfile userProfile = (UserProfile) principal;
-        Optional<UserProfile> byId = userProfileRepository.findById(userProfile.getId());
-        return byId.orElse(null);
+        UserProfile userProfile;
+        Optional<Object> principal = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        if (principal.isPresent()) {
+            userProfile = (UserProfile) principal.get();
+            Optional<UserProfile> byId = userProfileRepository.findById(userProfile.getId());
+            return byId.orElse(null);
+        }
+        return null;
     }
 
     @Override
     public Double money() {
-        Double money = 0.0;
-        Map<String, Product> basket = getCurrentUser().getBasket();
-        for (Map.Entry<String, Product> s : basket.entrySet()) {
-            money = money + basket.get(s.getKey()).getPriceFromSize().get(s.getKey());
+        double money = 0.0;
+        List<Basket> basket = getCurrentUser().getBasket();
+
+        for (Basket b : basket) {
+            Product product = b.getProduct();
+            if (product.getStock() != null && product.getStock() != 0.0) {
+                Double delivery = product.getPriceFromSize().get(b.getKey()) * (product.getStock() / 100);
+                money = money + (product.getPriceFromSize().get(b.getKey()) - delivery);
+            } else {
+                money = money + product.getPriceFromSize().get(b.getKey());
+            }
         }
         return money;
     }
@@ -102,6 +120,7 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
     public Double buyProduct(UserProfile userProfile, Double delivery) {
         Optional<UserProfile> cheekUser = userProfileRepository.findByUsername(userProfile.getUsername());
         if (cheekUser.isPresent() && !cheekUser.get().getBasket().isEmpty()) {
+            basketRepository.deleteAll(userProfile.getBasket());
             userProfile.getBasket().clear();
             userProfileRepository.save(userProfile);
         }
@@ -122,22 +141,66 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
         }
     }
 
+    @Cacheable("user")
     @Override
-    public Map<String, Product> getBasketToPage() {
-        Map<String, Product> array = new LinkedHashMap<>();
+    public List<Basket> getBasketToPage() {
+        List<Basket> array = new ArrayList<>();
         Product product;
         String key;
         Double delivery;
-        for (Map.Entry<String, Product> a : getCurrentUser().getBasket().entrySet()) {
-            product = a.getValue();
+        double money;
+        Basket basket;
+        for (Basket a : getCurrentUser().getBasket()) {
+            product = a.getProduct();
             key = a.getKey();
-            if (a.getValue().getStock() != null && a.getValue().getStock() != 0.0) {
+            if (product.getStock() != null && product.getStock() != 0.0) {
                 delivery = product.getPriceFromSize().get(key) * (product.getStock() / 100);
-                array.put(String.valueOf(delivery), product);
+                money = product.getPriceFromSize().get(key) - delivery;
+                basket = Basket.builder()
+                        .id(a.getId())
+                        .userProfile(a.getUserProfile())
+                        .key(String.valueOf(money))
+                        .product(product)
+                        .quantity(a.getQuantity())
+                        .build();
+                array.add(basket);
             } else {
-                array.put(String.valueOf(product.getPriceFromSize().get(key)), product);
+                basket = Basket.builder()
+                        .id(a.getId())
+                        .userProfile(a.getUserProfile())
+                        .key(String.valueOf(product.getPriceFromSize().get(key)))
+                        .product(product)
+                        .quantity(a.getQuantity())
+                        .build();
+                array.add(basket);
             }
         }
         return array;
+    }
+
+
+    @CacheEvict(value = {"user", "users"}, allEntries = true)
+    @Override
+    public UserProfile editUser(UserProfile userProfile, String username, Map<String, String> form) {
+        Optional<UserProfile> userProfile1 = Optional.ofNullable(userProfile);
+        if (userProfile1.isPresent() && username != null && !username.equals("")) {
+            userProfile1.get().setUsername(username);
+        }
+        if (userProfile1.isPresent() && !form.isEmpty()) {
+
+            Set<String> roles = Arrays.stream(Role.values())
+                    .map(Role::name)
+                    .collect(Collectors.toSet());
+
+            userProfile1.get().getRoles().clear();
+
+            for (String key : form.keySet()) {
+                if (roles.contains(key)) {
+                    userProfile1.get().getRoles().add(Role.valueOf(key));
+                }
+            }
+            return userProfileRepository.save(userProfile1.get());
+        }
+        return userProfile;
     }
 }

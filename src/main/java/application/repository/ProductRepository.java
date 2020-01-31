@@ -25,10 +25,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAll();
 
     @Override
-    @CacheEvict(value={"productsByType","productsAll"}, allEntries=true)
+    @CacheEvict(value = {"productsByType", "productsAll"}, allEntries = true)
     void delete(Product product);
 
     @Override
-    @CacheEvict(value={"productsByType","productsAll"}, allEntries=true)
+    @CacheEvict(value = {"productsByType", "productsAll"}, allEntries = true)
     <S extends Product> S saveAndFlush(S s);
 }

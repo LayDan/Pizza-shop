@@ -1,29 +1,40 @@
 package application.controller;
 
 import application.domain.LocaleMessage;
-import application.service.IProductService;
+import application.domain.Role;
+import application.domain.UserProfile;
+import application.repository.UserProfileRepository;
+import application.service.ITypeProductService;
 import application.service.IUserProfileService;
 import io.swagger.annotations.Api;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @Api(value = "Account resources")
 public class AccountPage {
 
-
-    public AccountPage(IUserProfileService iUserProfileService, IProductService iProductService) {
+    public AccountPage(UserProfileRepository userProfileRepository, ITypeProductService iTypeProductService, IUserProfileService iUserProfileService) {
+        this.userProfileRepository = userProfileRepository;
+        this.iTypeProductService = iTypeProductService;
         this.iUserProfileService = iUserProfileService;
-        this.iProductService = iProductService;
     }
 
+    private UserProfileRepository userProfileRepository;
+    private ITypeProductService iTypeProductService;
     private IUserProfileService iUserProfileService;
-    private IProductService iProductService;
+
+
+    private String money = "money";
+    private String productFromBasket = "productFromBasket";
 
     @GetMapping("/account")
     public String account(Model model, Locale locale) {
@@ -41,29 +52,80 @@ public class AccountPage {
     public String getBasket(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
-
-        model.addAttribute("productFromBasket", iUserProfileService.getBasketToPage());
-        model.addAttribute("money", iUserProfileService.money());
+        model.addAttribute(productFromBasket, iUserProfileService.getBasketToPage());
+        model.addAttribute(money, iUserProfileService.money());
         return "basket";
     }
 
     @PostMapping("/basket")
-    public String BuyBasket(Model model, @RequestParam(required = false) String status, @RequestParam(required = false) Double delivery, Locale locale) {
+    public String buyBasket(Model model, @RequestParam(required = false) String status, @RequestParam(required = false) Double delivery, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         if (status != null) {
             model.addAttribute("success", iUserProfileService.buyProduct(iUserProfileService.getCurrentUser(), delivery));
-            model.addAttribute("productFromBasket", iUserProfileService.getCurrentUser().getBasket());
-            model.addAttribute("money", iUserProfileService.money());
+            model.addAttribute(productFromBasket, iUserProfileService.getCurrentUser().getBasket());
+            model.addAttribute(money, iUserProfileService.money());
         } else {
-            model.addAttribute("productFromBasket", iUserProfileService.getCurrentUser().getBasket());
+            model.addAttribute(productFromBasket, iUserProfileService.getCurrentUser().getBasket());
             if (delivery != null) {
                 model.addAttribute("success", iUserProfileService.money() + delivery);
             } else {
-                model.addAttribute("money", iUserProfileService.money());
+                model.addAttribute(money, iUserProfileService.money());
             }
         }
         return "basket";
     }
 
+    @GetMapping("/administrationPanel")
+    public String getAdministrationPanel(Model model, Locale locale) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute(localeMessage.navBar(model, locale));
+        return "administrationPanel";
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    @GetMapping("/addTypeProduct")
+    public String addTypeProduct(Model model, Locale locale) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute(localeMessage.navBar(model, locale));
+        return "addTypeProduct";
+    }
+
+    @PostMapping("/addTypeProduct")
+    public String postAddTypeProduct(Model model, Locale locale, @RequestParam String type) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute(localeMessage.navBar(model, locale));
+        iTypeProductService.addType(type);
+        return "addTypeProduct";
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    @GetMapping("/editUsers")
+    public String editUsers(Model model, Locale locale) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute(localeMessage.navBar(model, locale));
+        model.addAttribute("users", userProfileRepository.findAll());
+        return "editUsers";
+    }
+
+    @GetMapping("/editUsers/{userProfile}")
+    public String editUser(Model model, Locale locale, @PathVariable UserProfile userProfile) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute(localeMessage.navBar(model, locale));
+        model.addAttribute("roles", Role.values());
+        model.addAttribute("user", userProfile);
+        return "editSomeUser";
+    }
+
+    @PostMapping("/editUsers")
+    public String posteditUsers(Model model, Locale locale,
+                                @RequestParam String username,
+                                @RequestParam Map<String, String> formRole,
+                                @RequestParam(name = "userId") long id) {
+        LocaleMessage localeMessage = new LocaleMessage();
+        model.addAttribute(localeMessage.navBar(model, locale));
+        Optional<UserProfile> byId = userProfileRepository.findById(id);
+        byId.ifPresent(userProfile -> iUserProfileService.editUser(userProfile, username, formRole));
+        return "redirect:/editUsers";
+    }
 }

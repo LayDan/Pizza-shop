@@ -45,7 +45,6 @@ public class MailConfig {
         properties.setProperty("mail.auth", auth);
         mailSender.setJavaMailProperties(properties);
 
-
         return mailSender;
     }
 }

@@ -24,6 +24,18 @@
                    aria-haspopup="true" aria-expanded="false">${catalog}</a>
             </li>
         </#if>
+        <#if isAdmin>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="/account" id="navbarDropdown3" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${account}</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/account">${account}</a>
+                <a class="dropdown-item" href="/administrationPanel">Админ-панель</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/basket">${basket}</a>
+            </div>
+        </li>
+        <#else>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="/account" id="navbarDropdown1" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${account}</a>
@@ -33,6 +45,7 @@
                 <a class="dropdown-item" href="/basket">${basket}</a>
             </div>
         </li>
+        </#if>
     </div>
     <#if name??>
     <div class="navbar-text mr-3">${name}</div>

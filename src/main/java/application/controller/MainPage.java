@@ -34,7 +34,7 @@ public class MainPage {
     public String startRegistration(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
-        model.addAttribute(localeMessage.registration(model,locale));
+        model.addAttribute(localeMessage.registration(model, locale));
         return "registration";
     }
 
@@ -52,18 +52,8 @@ public class MainPage {
         return "redirect:/login";
     }
 
-    @GetMapping("/")
+    @GetMapping(value = {"/", "/main"})
     public String gretting(Model model, Locale locale) {
-        LocaleMessage localeMessage = new LocaleMessage();
-        model.addAttribute(localeMessage.navBar(model, locale));
-        if (iUserProfileService.getCurrentUser() != null) {
-            model.addAttribute("infoUser", iUserProfileService.getCurrentUser());
-        }
-        return "main";
-    }
-
-    @GetMapping("/main")
-    public String mainWindow2(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         if (iUserProfileService.getCurrentUser() != null) {

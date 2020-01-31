@@ -2,6 +2,7 @@ package application.controller;
 
 import application.domain.LocaleMessage;
 import application.domain.Product;
+import application.domain.TypeProduct;
 import application.repository.ProductRepository;
 import application.repository.TypeProductRepository;
 import application.service.IProductService;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Optional;
 
 @Controller
 public class ProductFunction {
@@ -31,6 +33,9 @@ public class ProductFunction {
     }
 
     private ArrayList<Integer> arr = new ArrayList<>();
+    private String catalog = "catalog";
+    private String allProduct = "AllProduct";
+    private String types = "types";
 
     @GetMapping("/addProduct")
     public String addProduct(Model model, @RequestParam(value = "size", defaultValue = "1") String size, Locale locale) {
@@ -43,7 +48,7 @@ public class ProductFunction {
             }
         }
         model.addAttribute("array", arr);
-        model.addAttribute("types", typeProductRepository.findAll());
+        model.addAttribute(types, typeProductRepository.findAll());
         return "addProduct";
     }
 
@@ -68,21 +73,22 @@ public class ProductFunction {
                     map.put(sizeProduct[i], price[i]);
                 }
             }
-            if (typeProductRepository.findByType(type).isPresent()) {
+            Optional<TypeProduct> byType = typeProductRepository.findByType(type);
+            if (byType.isPresent()) {
                 Product product = Product.builder()
                         .code(code)
                         .description(description)
                         .name(name)
                         .priceFromSize(map)
-                        .type(typeProductRepository.findByType(type).get())
+                        .type(byType.get())
                         .build();
                 product.setPriceFromSize(map);
                 iproductService.addProduct(product, file);
             }
-            model.addAttribute("AllProduct", productRepository.findAll());
-            model.addAttribute("types", typeProductRepository.findAllType());
+            model.addAttribute(allProduct, productRepository.findAll());
+            model.addAttribute(types, typeProductRepository.findAllType());
             arr.clear();
-            return "catalog";
+            return catalog;
         } else {
             arr.clear();
             return "addProduct";
@@ -102,9 +108,9 @@ public class ProductFunction {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         iproductService.editProduct(product, stock, name);
-        model.addAttribute("AllProduct", productRepository.findAll());
-        model.addAttribute("types", typeProductRepository.findAllType());
-        return "catalog";
+        model.addAttribute(allProduct, productRepository.findAll());
+        model.addAttribute(types, typeProductRepository.findAllType());
+        return catalog;
     }
 
     @GetMapping("/delete")
@@ -112,9 +118,9 @@ public class ProductFunction {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         iproductService.deleteProduct(product.getId());
-        model.addAttribute("AllProduct", productRepository.findAll());
-        model.addAttribute("types", typeProductRepository.findAllType());
-        return "catalog";
+        model.addAttribute(allProduct, productRepository.findAll());
+        model.addAttribute(types, typeProductRepository.findAllType());
+        return catalog;
     }
 
 }

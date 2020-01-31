@@ -1,8 +1,9 @@
 package application.service;
 
-import application.domain.Product;
+import application.domain.Basket;
 import application.domain.UserProfile;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IUserProfileService {
@@ -18,5 +19,7 @@ public interface IUserProfileService {
 
     boolean activateUser(String code);
 
-    Map<String, Product> getBasketToPage();
+    List<Basket> getBasketToPage();
+
+    UserProfile editUser(UserProfile userProfile, String username, Map<String, String> form);
 }
