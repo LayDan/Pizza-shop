@@ -71,13 +71,13 @@ public class ProductService implements IProductService {
                 .imagePath(resultFilename)
                 .price(null)
                 .stock(null)
+                .promotionalItem(null)
                 .build();
         productRepository.saveAndFlush(newProduct);
         return newProduct;
-
     }
 
-    @CacheEvict(value = {"user"}, allEntries = true)
+    @CacheEvict(value = {"user", "productsPromotion", "productsByType", "productsAll"}, allEntries = true)
     @Override
     public Product editProduct(Product product, Double stock, String name) {
         Optional<Product> cheekProduct = productRepository.findById(product.getId());
@@ -85,16 +85,18 @@ public class ProductService implements IProductService {
         if (cheekProduct.isPresent() && (name == null || name.equals(""))) {
             name = cheekProduct.get().getName();
         }
-        if (stock == null) {
-            stock = 0.0;
-        }
         if (cheekProduct.isPresent()) {
-            cheekProduct.get().setName(name);
-            cheekProduct.get().setStock(stock);
-            return productRepository.save(cheekProduct.get());
-        } else {
-            return null;
+            if (stock == null || stock == 0) {
+                cheekProduct.get().setStock(null);
+                cheekProduct.get().setPromotionalItem(false);
+            } else {
+                cheekProduct.get().setName(name);
+                cheekProduct.get().setStock(stock);
+                cheekProduct.get().setPromotionalItem(true);
+                return productRepository.save(cheekProduct.get());
+            }
         }
+        return null;
     }
 
     @Override

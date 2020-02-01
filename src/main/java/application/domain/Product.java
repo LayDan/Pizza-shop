@@ -20,6 +20,7 @@ public class Product {
     private Double price;
     private String imagePath;
     private Double stock;
+    private Boolean promotionalItem;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type", referencedColumnName = "type")
     private TypeProduct type;
@@ -27,4 +28,5 @@ public class Product {
     @CollectionTable(name = "Product_priceFromSize", joinColumns = @JoinColumn(name = "Product_id"))
     @NonNull
     private Map<String, Double> priceFromSize;
+
 }
