@@ -58,3 +58,7 @@ body{
 .dropdown .dropdown-menu{
     background: rgba(0,0,0,0.6);
 }
+.name{
+    color: white;
+    font-size: 23px;
+}

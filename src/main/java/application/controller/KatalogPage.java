@@ -72,7 +72,7 @@ public class KatalogPage {
     }
 
     @PostMapping(value = "{product}")
-    public String getProductSize(Model model, String size, Product product, Double priceToBasket, Locale locale) {
+    public String getProductSize(Model model, String size, Product product, String priceToBasket, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         if (size != null) {

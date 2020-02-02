@@ -48,7 +48,7 @@
         </#if>
     </div>
     <#if name??>
-    <div class="navbar-text mr-3">${name}</div>
+    <div class="navbar-text mr-3 name">${name}</div>
     <@l.logout/>
     <#else>
     <a href="/login" class="btn btn-info mr-3">${login}</a>
