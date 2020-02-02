@@ -1,5 +1,6 @@
 <#import "parts/common.ftl" as C>
 <@C.page>
+<link rel="stylesheet" href="/static/forNotDoneFile.css"/>
 <form method="post" enctype="multipart/form-data" xmlns="http://www.w3.org/1999/html">
     <div><label> Code : <input type="number" name="code" placeholder="Code"/> </label></div>
     <div><label> Name: <input type="text" name="name" placeholder="Name"/> </label></div>

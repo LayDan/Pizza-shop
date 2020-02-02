@@ -28,6 +28,7 @@ create table product (
     description varchar(255),
     price Double,
     stock Double,
+    promotional_item boolean,
     name varchar(255),
     type varchar(255),
     primary key (id),

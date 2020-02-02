@@ -26,26 +26,32 @@ public class BasketService implements IBasketService {
 
     @Override
     public Basket addProductToBasket(Product product, UserProfile userProfile, String key) {
+
         Optional<Product> productById = productRepository.findById(product.getId());
         Basket basket = null;
         Optional<UserProfile> profile = userProfileRepository.findById(userProfile.getId());
         if (productById.isPresent() && profile.isPresent()) {
             List<Basket> allByUserProfile = basketRepository.findAllByUserProfile(profile.get());
-            if (!allByUserProfile.isEmpty()) {
-                for (Basket a : allByUserProfile) {
-                    if (a.getProduct() == product && a.getKey().equals(key)) {
-                        a.setQuantity(a.getQuantity() + 1);
-                    } else {
-                        basket = Basket.builder()
-                                .quantity(1)
-                                .product(product)
-                                .userProfile(userProfile)
-                                .key(key)
-                                .build();
-                        basketRepository.saveAndFlush(basket);
-                    }
+            Optional<Basket> basketOptional = cheekCopy(allByUserProfile, product, key, userProfile);
+            if (basketOptional.isPresent()) {
+                basket = basketOptional.get();
+            }
+        }
+        return basket;
+    }
+
+    private Optional<Basket> cheekCopy(List<Basket> arr, Product product, String key, UserProfile userProfile) {
+        boolean cheekCopy = false;
+        Basket basket = null;
+        if (!arr.isEmpty()) {
+            for (Basket a : arr) {
+                if (a.getProduct().getId().equals(product.getId()) && a.getKey().equals(key)) {
+                    a.setQuantity(a.getQuantity() + 1);
+                    cheekCopy = true;
+                    break;
                 }
-            } else {
+            }
+            if (!cheekCopy) {
                 basket = Basket.builder()
                         .quantity(1)
                         .product(product)
@@ -54,7 +60,15 @@ public class BasketService implements IBasketService {
                         .build();
                 basketRepository.saveAndFlush(basket);
             }
+        } else {
+            basket = Basket.builder()
+                    .quantity(1)
+                    .product(product)
+                    .userProfile(userProfile)
+                    .key(key)
+                    .build();
+            basketRepository.saveAndFlush(basket);
         }
-        return basket;
+        return Optional.ofNullable(basket);
     }
 }

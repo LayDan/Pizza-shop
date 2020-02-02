@@ -1,10 +1,10 @@
 <#import "parts/common.ftl" as C>
 
 <@C.page>
-<link rel="stylesheet" href="/static/style.css"/>
+<link rel="stylesheet" href="/static/forNotDoneFile.css"/>
 
-<div class="container-fluid" id="accountInfo">
-    <div id="characteristicsInfo">
+<div class="container">
+    <div class="main-window-info">
         <div class="info">
             <label> Name : ${infoUser.firstName}</label>
         </div>
@@ -18,7 +18,7 @@
             <label> Bonus : ${infoUser.bonus}</label>
         </div>
     </div>
-</div>
 
+</div>
 
 </@C.page>

@@ -84,7 +84,7 @@ public class MainPage {
             model.addAttribute("message", "Activation code is not found!");
         }
 
-        return "login";
+        return "redirect:/login";
     }
 
 }

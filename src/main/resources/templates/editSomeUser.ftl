@@ -1,5 +1,6 @@
 <#import "parts/common.ftl" as C>
 <@C.page>
+<link rel="stylesheet" href="/static/forNotDoneFile.css"/>
 User editor
 <form action="/editUsers" method="post">
     <input type="text" name="username" value="${user.username}">

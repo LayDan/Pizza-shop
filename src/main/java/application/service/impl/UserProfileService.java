@@ -98,18 +98,23 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
         return null;
     }
 
+    @CacheEvict(value = {"user", "basket"}, allEntries = true)
     @Override
     public Double money() {
         double money = 0.0;
+        double productMoney = 0.0;
         List<Basket> basket = getCurrentUser().getBasket();
 
         for (Basket b : basket) {
             Product product = b.getProduct();
             if (product.getStock() != null && product.getStock() != 0.0) {
                 Double delivery = product.getPriceFromSize().get(b.getKey()) * (product.getStock() / 100);
-                money = money + (product.getPriceFromSize().get(b.getKey()) - delivery);
+                productMoney = product.getPriceFromSize().get(b.getKey()) * b.getQuantity();
+                delivery = delivery * b.getQuantity();
+                money = money + (productMoney - delivery);
             } else {
-                money = money + product.getPriceFromSize().get(b.getKey());
+                productMoney = product.getPriceFromSize().get(b.getKey()) * b.getQuantity();
+                money = money + productMoney;
             }
         }
         return money;

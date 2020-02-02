@@ -10,11 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MailSender {
 
-    private JavaMailSender mailSender;
 
     public MailSender(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
+
+    private JavaMailSender mailSender;
+
 
     @Value("${spring.mail.username}")
     private String username;

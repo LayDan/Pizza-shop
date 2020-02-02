@@ -1,0 +1,60 @@
+body{
+	background: url(https://www.meetic-group.com/download.php?file=/wp-content/uploads/sites/4/2017/09/match-pizza-making-classes.jpg);
+    background-repeat: no-repeat;
+    margin:auto;
+}
+
+.my-navbar{
+    border: 0;
+    border-radius: 0;
+    background-color: black;
+    background : rgba(0,0,0,0.75);
+    height: 60px;
+}
+.nav-item{
+    border: 0;
+    border-radius: 0;
+    padding-left: 25px;
+    margin-left: 15px;
+
+}
+.nav-item a{
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-family: initial;
+    font-style: initial;
+}
+.navbar-brand{
+    text-decoration: none;
+    color: white;
+  	display:inline block;
+    border-bottom: 1px;
+    font-size: 23px;
+    font-family: initial;
+    font-style: initial;
+}
+.nav-item a:hover{
+     color: cornsilk;
+     display: inline-block;
+     border-bottom: solid 3px bisque;
+}
+.navbar-brand:hover,
+              active,
+              focus{
+     color: cornsilk;
+     display: inline-block;
+     border-bottom: solid 3px bisque;
+}
+.dropdown-menu a{
+    color: white !important;
+    background: none;
+}
+.dropdown-menu .dropdown-item:hover{
+    color: cornsilk !important;
+    background: none;
+    border:0;
+}
+.dropdown .dropdown-menu{
+    background: rgba(0,0,0,0.6);
+}

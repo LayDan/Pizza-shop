@@ -21,7 +21,7 @@ spring:
     port: 465
     auth: true
     username: valerii.vasylkivskyi@gmail.com
-    password: xladik18
+    password: xladik19
     starttls:
       enable: true
     transport:

@@ -2,6 +2,7 @@
 
 <@C.page>
 <link rel="stylesheet" href="/static/katalogStyle.css"/>
+
 <!--<link rel="stylesheet" href="/static/style.css"/>-->
 <form action="/catalog" method="post">
     <label> <input type="text" name="search"></label>

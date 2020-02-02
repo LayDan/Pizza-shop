@@ -1,6 +1,6 @@
 <#import "parts/common.ftl" as C>
-
 <@C.page>
+<link rel="stylesheet" href="/static/forNotDoneFile.css"/>
 <table>
     <thead>
     <tr>

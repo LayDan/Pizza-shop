@@ -8,7 +8,6 @@
         <div class="col-md-8 products">
             <div class="row">
                 <#list productFromBasket as key>
-
                 <div class="col-sm-3 product-wrapper" id="myDIV">
                     <div class="product">
                         <div class="product-img">
@@ -20,6 +19,9 @@
                         </div>
                         <div class="product-price">
                             ${key.key}
+                        </div>
+                        <div class="product-price">
+                            ${key.quantity}
                         </div>
                     </div>
                 </div>
