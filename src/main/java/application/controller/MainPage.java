@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -47,7 +48,7 @@ public class MainPage {
     }
 
     @PostMapping("/registration")
-    public String endRegistration(Model model, UserProfile user, Locale locale) {
+    public String endRegistration(Model model, @Valid UserProfile user, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         model.addAttribute(localeMessage.registration(model, locale));

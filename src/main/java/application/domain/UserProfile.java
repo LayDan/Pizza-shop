@@ -8,6 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -23,9 +26,12 @@ public class UserProfile implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
+
+    @Size(min = 6, max = 50)
     @ApiModelProperty(value = "userName")
     private String username;
     @ApiModelProperty(value = "password")
+    @Size(min = 6, max = 50)
     private String password;
     @ApiModelProperty(value = "bonus")
     private Integer bonus;
@@ -35,6 +41,8 @@ public class UserProfile implements UserDetails {
     private String firstName;
     @ApiModelProperty(value = "lastName")
     private String lastName;
+    @Email
+    @NotEmpty
     @ApiModelProperty(value = "mail")
     private String mail;
     @ApiModelProperty(value = "activationCode")

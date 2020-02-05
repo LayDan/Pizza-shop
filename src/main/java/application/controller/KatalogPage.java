@@ -9,8 +9,10 @@ import application.service.IUserProfileService;
 import application.service.impl.BasketService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Locale;
 
 @Controller
@@ -62,7 +64,7 @@ public class KatalogPage {
     }
 
     @GetMapping(value = "{product}")
-    public String getProduct(@PathVariable Product product, Model model, Locale locale) {
+    public String getProduct(@Valid @PathVariable Product product, Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
 

@@ -17,3 +17,4 @@ The following technologies are used :
 * freemarker
 * Swagger
 * i18n
+* logging

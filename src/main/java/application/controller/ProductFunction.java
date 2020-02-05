@@ -8,11 +8,13 @@ import application.repository.TypeProductRepository;
 import application.service.IProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -60,7 +62,7 @@ public class ProductFunction {
                                 @RequestParam String name,
                                 @RequestParam("file") MultipartFile file,
                                 @RequestParam(name = "sizeProduct") String[] sizeProduct,
-                                @RequestParam(name = "priceForProduct") Double[] price, Locale locale) throws IOException {
+                                @Valid @RequestParam(name = "priceForProduct") Double[] price, Locale locale) throws IOException {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         LinkedHashMap<String, Double> map = new LinkedHashMap<>();
@@ -96,7 +98,7 @@ public class ProductFunction {
     }
 
     @GetMapping("/editProduct")
-    public String editProduct(Model model, Product product, Locale locale) {
+    public String editProduct(Model model, @Valid Product product, Locale locale, BindingResult result) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         model.addAttribute(product);

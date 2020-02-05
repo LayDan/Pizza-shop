@@ -28,16 +28,16 @@
             New price = ${newPrice}
             <#else>
             Price = ${price}
-            </#if>
-            <form method="post">
-                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-                <button class="btn btn-success selected" type="submit" value="${price}" name="priceToBasket">Добавить в корзину</button>
-            </form>
-            <#else>
-            Please select
-            </#if>
-        </div>
-    <a href="/editProduct?productId=${product.id}">Edit</a>
-    <a href="/delete?productId=${product.id}">Delete</a>
+        </#if>
+        <form method="post">
+            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+            <button class="btn btn-success selected" type="submit" value="${price}" name="priceToBasket">Добавить в корзину</button>
+        </form>
+        <#else>
+        Please select
+    </#if>
+</div>
+<a href="/editProduct?productId=${product.id}">Edit</a>
+<a href="/delete?productId=${product.id}">Delete</a>
 
 </@C.page>
