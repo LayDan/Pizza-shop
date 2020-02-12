@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -27,22 +28,30 @@ public class UserProfile implements UserDetails {
     @JsonIgnore
     private Long id;
 
-    @Size(min = 6, max = 50)
-    @ApiModelProperty(value = "userName")
+
+    @ApiModelProperty(value = "username")
+    @Size(min = 2, max = 50)
     private String username;
+
     @ApiModelProperty(value = "password")
-    @Size(min = 6, max = 50)
+    @NotBlank()
     private String password;
+
     @ApiModelProperty(value = "bonus")
     private Integer bonus;
+
     @ApiModelProperty(value = "active")
     private Boolean active;
+
     @ApiModelProperty(value = "firstName")
+    @NotBlank()
     private String firstName;
+
     @ApiModelProperty(value = "lastName")
+    @NotBlank()
     private String lastName;
     @Email
-    @NotEmpty
+    @NotBlank()
     @ApiModelProperty(value = "mail")
     private String mail;
     @ApiModelProperty(value = "activationCode")

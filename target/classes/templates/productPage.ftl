@@ -10,7 +10,7 @@
         <img src="/images/${product.imagePath}">
     </div>
     <div class="right-column">
-        <div class="name">${product.name}</div>
+        <div class="name-product">${product.name}</div>
         <div class="textDescription">${product.description}</div>
         <form method="post">
             <#list priceFromSize?keys as key>

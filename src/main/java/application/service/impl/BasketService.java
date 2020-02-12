@@ -7,11 +7,13 @@ import application.repository.BasketRepository;
 import application.repository.ProductRepository;
 import application.repository.UserProfileRepository;
 import application.service.IBasketService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class BasketService implements IBasketService {
     private UserProfileRepository userProfileRepository;
@@ -59,6 +61,7 @@ public class BasketService implements IBasketService {
                         .key(key)
                         .build();
                 basketRepository.saveAndFlush(basket);
+                log.info("Create Basket " + basket.getId());
             }
         } else {
             basket = Basket.builder()
@@ -68,6 +71,7 @@ public class BasketService implements IBasketService {
                     .key(key)
                     .build();
             basketRepository.saveAndFlush(basket);
+            log.info("Create Basket " + basket.getId());
         }
         return Optional.ofNullable(basket);
     }

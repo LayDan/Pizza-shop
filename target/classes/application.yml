@@ -5,16 +5,21 @@ upload:
   path: C:/Users/User/Desktop/PizzaShop/upload
 
 logging:
-  file: /Users/User/Desktop/app.log
+  path: log/
   pattern:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
   level:
-    ru:
-      leodev: DEBUG
+    application.service.impl:
+      ProductService: INFO
+      UserProfileService: INFO
+      TypeProductService: INFO
+      BasketService: INFO
+    ROOT: ERROR
     org:
-      springframework:
-        web: ERROR
+      springframework: ERROR
+    ru:
+      leodev: INFO
 
 spring:
   profiles:

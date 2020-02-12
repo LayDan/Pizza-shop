@@ -6,9 +6,9 @@ import application.domain.TypeProduct;
 import application.repository.ProductRepository;
 import application.repository.TypeProductRepository;
 import application.service.IProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Optional;
+
 
 @Controller
 public class ProductFunction {
@@ -56,13 +57,10 @@ public class ProductFunction {
 
     @PostMapping("/addProduct")
     public String getAddProduct(Model model,
-                                @RequestParam Long code,
-                                @RequestParam String description,
-                                @RequestParam String type,
-                                @RequestParam String name,
+                                @Valid Product product,
                                 @RequestParam("file") MultipartFile file,
                                 @RequestParam(name = "sizeProduct") String[] sizeProduct,
-                                @Valid @RequestParam(name = "priceForProduct") Double[] price, Locale locale) throws IOException {
+                                @RequestParam(name = "priceForProduct") Double[] price, Locale locale) throws IOException {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         LinkedHashMap<String, Double> map = new LinkedHashMap<>();
@@ -75,17 +73,16 @@ public class ProductFunction {
                     map.put(sizeProduct[i], price[i]);
                 }
             }
-            Optional<TypeProduct> byType = typeProductRepository.findByType(type);
+            Optional<TypeProduct> byType = typeProductRepository.findByType(product.getType().getType());
             if (byType.isPresent()) {
-                Product product = Product.builder()
-                        .code(code)
-                        .description(description)
-                        .name(name)
+                Product product1 = Product.builder()
+                        .code(product.getCode())
+                        .description(product.getDescription())
+                        .name(product.getName())
                         .priceFromSize(map)
                         .type(byType.get())
                         .build();
-                product.setPriceFromSize(map);
-                iproductService.addProduct(product, file);
+                iproductService.addProduct(product1, file);
             }
             model.addAttribute(allProduct, productRepository.findAll());
             model.addAttribute(types, typeProductRepository.findAllType());
@@ -98,7 +95,7 @@ public class ProductFunction {
     }
 
     @GetMapping("/editProduct")
-    public String editProduct(Model model, @Valid Product product, Locale locale, BindingResult result) {
+    public String editProduct(Model model, Product product, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         model.addAttribute(product);

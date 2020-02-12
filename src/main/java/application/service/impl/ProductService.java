@@ -8,6 +8,7 @@ import application.repository.ProductRepository;
 import application.repository.TypeProductRepository;
 import application.repository.UserProfileRepository;
 import application.service.IProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 public class ProductService implements IProductService {
@@ -74,6 +76,7 @@ public class ProductService implements IProductService {
                 .promotionalItem(null)
                 .build();
         productRepository.saveAndFlush(newProduct);
+        log.info("Create product " + newProduct.getId() + " Name:" + newProduct.getName());
         return newProduct;
     }
 
@@ -93,6 +96,7 @@ public class ProductService implements IProductService {
                 cheekProduct.get().setName(name);
                 cheekProduct.get().setStock(stock);
                 cheekProduct.get().setPromotionalItem(true);
+                log.info("Update product " + cheekProduct.get().getId() + "Name:" + cheekProduct.get().getName());
                 return productRepository.save(cheekProduct.get());
             }
         }
@@ -102,7 +106,10 @@ public class ProductService implements IProductService {
     @Override
     public void deleteProduct(Long id) {
         Optional<Product> product = productRepository.findById(id);
-        product.ifPresent(value -> productRepository.delete(value));
+        if (product.isPresent()) {
+            log.info("Delete product " + product.get().getId() + "Name:" + product.get().getName());
+            productRepository.delete(product.get());
+        }
     }
 
     @CacheEvict(value = {"user"}, allEntries = true)

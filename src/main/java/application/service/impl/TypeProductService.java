@@ -3,11 +3,13 @@ package application.service.impl;
 import application.domain.TypeProduct;
 import application.repository.TypeProductRepository;
 import application.service.ITypeProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 public class TypeProductService implements ITypeProductService {
@@ -27,7 +29,8 @@ public class TypeProductService implements ITypeProductService {
                     .type(type)
                     .build();
             typeProductRepository.saveAndFlush(newTypeProduct);
-            return Optional.ofNullable(newTypeProduct);
+            log.info("Create TypeProduct " + newTypeProduct.getId());
+            return Optional.of(newTypeProduct);
         }
         return Optional.empty();
     }

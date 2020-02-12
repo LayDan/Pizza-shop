@@ -2,7 +2,7 @@
 <@C.page>
 <link rel="stylesheet" href="/static/forNotDoneFile.css"/>
 <form method="post" enctype="multipart/form-data" xmlns="http://www.w3.org/1999/html">
-    <div><label> Code : <input type="number" name="code" placeholder="Code"/> </label></div>
+    <div><label> Code : <input type="number" name="code" placeholder="code"/> </label></div>
     <div><label> Name: <input type="text" name="name" placeholder="Name"/> </label></div>
     <div>Description:<textarea name="description"> </textarea></div>
     <div><label> Image: <input type="file" name="file" placeholder="Image"/></label></div>
@@ -30,7 +30,7 @@
     <div><label> Type:
         <select name="type">
             <#list types as type>
-            <option name="type"> ${type.type} </option>
+            <option typeof="number" name="type" value=${type.id}> ${type.type} </option>
             <#else>
             none
         </#list>

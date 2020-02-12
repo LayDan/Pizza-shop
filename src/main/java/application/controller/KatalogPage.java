@@ -9,8 +9,10 @@ import application.service.IUserProfileService;
 import application.service.impl.BasketService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.Locale;
@@ -27,11 +29,11 @@ public class KatalogPage {
         this.iproductService = iproductService;
     }
 
-    private BasketService basketService;
-    private TypeProductRepository typeProductRepository;
-    private IUserProfileService iUserProfileService;
-    private ProductRepository productRepository;
-    private IProductService iproductService;
+    private final BasketService basketService;
+    private final TypeProductRepository typeProductRepository;
+    private final IUserProfileService iUserProfileService;
+    private final ProductRepository productRepository;
+    private final IProductService iproductService;
 
     private String size;
     private String catalog = "catalog";
@@ -64,7 +66,7 @@ public class KatalogPage {
     }
 
     @GetMapping(value = "{product}")
-    public String getProduct(@Valid @PathVariable Product product, Model model, Locale locale) {
+    public String getProduct(Product product, Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
 
@@ -74,7 +76,7 @@ public class KatalogPage {
     }
 
     @PostMapping(value = "{product}")
-    public String getProductSize(Model model, String size, Product product, String priceToBasket, Locale locale) {
+    public String getProductSize(Model model, String size, @Valid Product product, String priceToBasket, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         if (size != null) {

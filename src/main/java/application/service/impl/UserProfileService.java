@@ -7,6 +7,7 @@ import application.domain.UserProfile;
 import application.repository.BasketRepository;
 import application.repository.UserProfileRepository;
 import application.service.IUserProfileService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 public class UserProfileService implements UserDetailsService, IUserProfileService {
@@ -140,6 +142,7 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
             user.get().setActivationCode(null);
             user.get().setActive(true);
             userProfileRepository.save(user.get());
+            log.info("Create user " + user.get().getId());
             return true;
         } else {
             return false;
@@ -204,6 +207,7 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
                     userProfile1.get().getRoles().add(Role.valueOf(key));
                 }
             }
+            log.info("Update user " + userProfile1.get().getId());
             return userProfileRepository.save(userProfile1.get());
         }
         return userProfile;
