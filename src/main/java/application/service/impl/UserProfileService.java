@@ -104,7 +104,7 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
     @Override
     public Double money() {
         double money = 0.0;
-        double productMoney = 0.0;
+        double productMoney;
         List<Basket> basket = getCurrentUser().getBasket();
 
         for (Basket b : basket) {
@@ -211,5 +211,15 @@ public class UserProfileService implements UserDetailsService, IUserProfileServi
             return userProfileRepository.save(userProfile1.get());
         }
         return userProfile;
+    }
+
+    @Override
+    public boolean deleteUser(UserProfile userProfile) {
+        Optional<UserProfile> userProfileRepositoryById = userProfileRepository.findById(userProfile.getId());
+        if (userProfileRepositoryById.isPresent()) {
+            userProfileRepository.delete(userProfileRepositoryById.get());
+            return true;
+        }
+        return false;
     }
 }

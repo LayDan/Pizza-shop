@@ -5,7 +5,7 @@ upload:
   path: C:/Users/User/Desktop/PizzaShop/upload
 
 logging:
-  path: log/
+  file: logging/log.log
   pattern:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
@@ -18,8 +18,7 @@ logging:
     ROOT: ERROR
     org:
       springframework: ERROR
-    ru:
-      leodev: INFO
+  appender:
 
 spring:
   profiles:

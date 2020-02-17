@@ -7,6 +7,7 @@ import application.repository.UserProfileRepository;
 import application.service.ITypeProductService;
 import application.service.IUserProfileService;
 import io.swagger.annotations.Api;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,6 +78,7 @@ public class AccountPage {
     }
 
     @GetMapping("/administrationPanel")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String getAdministrationPanel(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
@@ -85,6 +87,7 @@ public class AccountPage {
 
     //////////////////////////////////////////////////////////////////////
     @GetMapping("/addTypeProduct")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String addTypeProduct(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
@@ -92,6 +95,7 @@ public class AccountPage {
     }
 
     @PostMapping("/addTypeProduct")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String postAddTypeProduct(Model model, Locale locale, @RequestParam String type) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
@@ -101,6 +105,7 @@ public class AccountPage {
 
     ///////////////////////////////////////////////////////////////////////
     @GetMapping("/editUsers")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String editUsers(Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
@@ -109,6 +114,7 @@ public class AccountPage {
     }
 
     @GetMapping("/editUsers/{userProfile}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String editUser(Model model, Locale locale, @PathVariable UserProfile userProfile) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
@@ -118,6 +124,7 @@ public class AccountPage {
     }
 
     @PostMapping("/editUsers")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String posteditUsers(Model model, Locale locale,
                                 @RequestParam String username,
                                 @RequestParam Map<String, String> formRole,

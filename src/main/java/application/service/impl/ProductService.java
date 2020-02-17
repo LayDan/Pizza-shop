@@ -96,7 +96,7 @@ public class ProductService implements IProductService {
                 cheekProduct.get().setName(name);
                 cheekProduct.get().setStock(stock);
                 cheekProduct.get().setPromotionalItem(true);
-                log.info("Update product " + cheekProduct.get().getId() + "Name:" + cheekProduct.get().getName());
+                log.info("Update product " + cheekProduct.get().getId() + " Name:" + cheekProduct.get().getName());
                 return productRepository.save(cheekProduct.get());
             }
         }
@@ -107,7 +107,7 @@ public class ProductService implements IProductService {
     public void deleteProduct(Long id) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isPresent()) {
-            log.info("Delete product " + product.get().getId() + "Name:" + product.get().getName());
+            log.info("Delete product " + product.get().getId() + " Name:" + product.get().getName());
             productRepository.delete(product.get());
         }
     }

@@ -22,4 +22,6 @@ public interface IUserProfileService {
     List<Basket> getBasketToPage();
 
     UserProfile editUser(UserProfile userProfile, String username, Map<String, String> form);
+
+    boolean deleteUser(UserProfile userProfile);
 }
