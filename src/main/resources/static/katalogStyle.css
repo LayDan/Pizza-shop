@@ -54,11 +54,14 @@ img {
  color: #123;
  font-weight: 500;
  text-transform: uppercase;
+
 }
 .product-title a{
+    text-decoration: none;
     color:#2F4F4F;
 }
 .product-description a {
+	text-decoration: none;
     color: #123;
     opacity: 0.5;
     padding-top:5px;

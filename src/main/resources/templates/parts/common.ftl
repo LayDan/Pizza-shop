@@ -1,6 +1,6 @@
 <#macro page>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk_UA">
 <head>
     <meta charset="UTF-8">
     <meta charset = "ISO-8859-1"/>
@@ -14,6 +14,7 @@
 <body>
 <#include "navBar.ftl">
 <div class="container-fluid">
+
     <#nested>
 </div>
 <!-- Optional JavaScript -->

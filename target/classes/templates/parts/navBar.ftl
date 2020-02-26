@@ -15,7 +15,7 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${catalog}</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/catalog">${catalog}</a>
-                    <a class="dropdown-item" href="/addProduct?size=1">Добавить товар</a>
+                    <a class="dropdown-item" href="/addProduct?size=1">${addProduct}</a>
                 </div>
             </li>
             <#else>
@@ -30,7 +30,7 @@
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${account}</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/account">${account}</a>
-                <a class="dropdown-item" href="/administrationPanel">Админ-панель</a>
+                <a class="dropdown-item" href="/administrationPanel">${adminPanel}</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="/basket">${basket}</a>
             </div>

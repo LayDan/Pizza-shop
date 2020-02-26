@@ -45,6 +45,9 @@ public class MvcConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
+
+        registry.addResourceHandler("/backGroundStyle/**")
+                .addResourceLocations("file:///C:/Users/User/Desktop/PizzaShop/backGroundStyle/");
         ///////////////////////////////////////////////////////////////////// Swagger
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");

@@ -24,6 +24,8 @@ public class LocaleMessage {
         model.addAttribute("registration", getMessage(locale, "label.registration"));
         model.addAttribute("login", getMessage(locale, "label.login"));
         model.addAttribute("password", getMessage(locale, "label.password"));
+        model.addAttribute("addProduct", getMessage(locale, "label.addProduct"));
+        model.addAttribute("adminPanel", getMessage(locale, "label.adminPanel"));
         return model;
     }
 
