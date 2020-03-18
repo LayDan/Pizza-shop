@@ -48,7 +48,7 @@ spring:
     port: 465
     auth: true
     username: valerii.vasylkivskyi@gmail.com
-    password: xladik19
+    password: 1
     starttls:
       enable: true
     transport:
@@ -59,10 +59,11 @@ spring:
 spring:
   profiles: devNoSql
   -datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://ec2-54-247-78-30.eu-west-1.compute.amazonaws.com:5432/d7pck1boaudu9r?sslmode=require
+    username: urdawrgiinqgvz
+    password: a23a647ee5a005e4a2a7f983fe8a0d71666786fa96e4211ba8f68f0317fa1ab5
+
   -jpa:
     show-sql: false
     hibernate:
@@ -73,14 +74,13 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-        dialect: org.hibernate.dialect.H2Dialect
         enable_lazy_load_no_trans: true
   -mail:
     host: smtp.gmail.com
     port: 465
     auth: true
     username: valerii.vasylkivskyi@gmail.com
-    password: xladik19
+    password: 1
     starttls:
       enable: true
     transport:

@@ -59,10 +59,11 @@ spring:
 spring:
   profiles: devNoSql
   -datasource:
-    url: postgres://urdawrgiinqgvz:a23a647ee5a005e4a2a7f983fe8a0d71666786fa96e4211ba8f68f0317fa1ab5@ec2-54-247-78-30.eu-west-1.compute.amazonaws.com:5432/d7pck1boaudu9r
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://ec2-54-247-78-30.eu-west-1.compute.amazonaws.com:5432/d7pck1boaudu9r?sslmode=require
     username: urdawrgiinqgvz
     password: a23a647ee5a005e4a2a7f983fe8a0d71666786fa96e4211ba8f68f0317fa1ab5
-    driverClassName: org.postgresql.Driver
+
   -jpa:
     show-sql: false
     hibernate:
