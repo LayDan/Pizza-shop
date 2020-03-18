@@ -11,6 +11,7 @@ import application.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -141,6 +142,14 @@ public class ProductService implements IProductService {
         } else {
             return (ArrayList<Product>) productRepository.findAll();
         }
+    }
+
+    @Async
+    @Override
+    public Object[] getProductsByNameFilter(String nameFilter) {
+        return productRepository.findAll().stream()
+                .filter(product -> product.getName().matches(nameFilter))
+                .toArray();
     }
 
     private ArrayList<Product> findByName(String name) {

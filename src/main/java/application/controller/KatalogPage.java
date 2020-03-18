@@ -42,7 +42,8 @@ public class KatalogPage {
     private String allProduct = "AllProduct";
 
     @GetMapping()
-    public String getKatalog(@RequestParam(name = "type", required = false, defaultValue = "") String type, Model model, Locale locale) {
+    public String getKatalog(@RequestParam(name = "type", required = false, defaultValue = "") String type,
+                             Model model, Locale locale) {
         LocaleMessage localeMessage = new LocaleMessage();
         model.addAttribute(localeMessage.navBar(model, locale));
         model.addAttribute(types, typeProductRepository.findAllType());

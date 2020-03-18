@@ -1,0 +1,36 @@
+.registration-data{
+    position: absolute;
+    width:330px;
+    height:350px;
+    margin-top: 100px;
+    margin-right: 120px;
+    border-radius: 15px 15px 360px 360px;
+    border: solid 2px silver;
+    right: 0;
+    background-color: white;
+    background : rgba(255,255,255, 0.7);
+    background: url(https://img.freepik.com/free-photo/_53876-63512.jpg?size=626&ext=jpg);
+
+
+}
+.label{
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom:30px;
+    padding-top:20px;
+    padding-left:40px;
+
+}
+.input{
+    position: absolute;
+    width: 75%;
+    box-sizing: border-box;
+
+}
+.login-button{
+    position:absolute;
+    margin-top:10px;
+    margin-left:105px;
+
+    border: none;
+}

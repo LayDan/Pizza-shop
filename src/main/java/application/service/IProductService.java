@@ -21,5 +21,6 @@ public interface IProductService {
 
     ArrayList<Product> search(String name);
 
+    Object[] getProductsByNameFilter(String nameFilter);
 
 }

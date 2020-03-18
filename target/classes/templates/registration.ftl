@@ -4,7 +4,9 @@
 
 <@C.page>
 <link rel="stylesheet" href="/static/registration.css"/>
+
 <div class="container-fluid">
+
     <div class="container">
         <div class="registration-data">
             <form method="post">

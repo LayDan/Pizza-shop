@@ -4,6 +4,9 @@
 <link rel="stylesheet" href="/static/katalogStyle.css"/>
 
 
+
+
+
 <#if PromotionProducts??>
 ТОП НЕДЕЛИ ПО СКИДКАМ<br>
 <div class="row">
